@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_task/provider/provider.dart';
 import 'package:flutter_task/view/screens/home_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(
-    TaskApp()
-  );
+  runApp(MultiProvider(
+    providers: globalProviders,
+    child: TaskApp(),
+  ));
 }
 
 class TaskApp extends StatefulWidget {
@@ -17,9 +20,7 @@ class _TaskAppState extends State<TaskApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'タスク管理アプリ',
-      theme: ThemeData(
-        brightness: Brightness.dark
-      ),
+      theme: ThemeData(brightness: Brightness.dark),
       home: HomeScreen(),
     );
   }

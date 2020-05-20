@@ -14,7 +14,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.6.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -26,6 +26,9 @@ dependencies:
 
   # Calender
   flutter_calendar_carousel: ^1.4.12
+
+  # Provider
+  provider: ^4.0.4
 
 dev_dependencies:
   flutter_test:
