@@ -20,7 +20,19 @@ class _TaskAppState extends State<TaskApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'タスク管理アプリ',
-      theme: ThemeData(brightness: Brightness.dark),
+      theme: ThemeData(
+        brightness: Brightness.light,
+        primaryColor: Colors.orange,
+        accentColor: Colors.orangeAccent,
+        primaryIconTheme: IconThemeData.fallback().copyWith(
+          color: Colors.white,
+        ),
+        primaryTextTheme: TextTheme(
+          title: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ),
       home: HomeScreen(),
     );
   }

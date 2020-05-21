@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_task/data/default_task_list.dart';
+import 'package:flutter_task/resources/models/bucket.dart';
 
-class TaskListTile extends StatelessWidget {
-  final TaskList taskList;
+class BucketTile extends StatelessWidget {
+  final Bucket bucket;
   final bool isEditable;
-  final ValueChanged<TaskList> onTapNext;
+  final ValueChanged<Bucket> onTapNext;
+  final ValueChanged<Bucket> onTapEdit;
 
-  TaskListTile(
-      {@required this.taskList,
-      @required this.isEditable,
-      @required this.onTapNext});
+  BucketTile({
+    @required this.bucket,
+    @required this.isEditable,
+    @required this.onTapEdit,
+    @required this.onTapNext,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       enabled: true,
       dense: true,
-      onTap: () => print('hogehoge'),
+      onTap: isEditable ? () => onTapEdit(bucket) : () => onTapNext(bucket),
       leading: Icon(
-        Icons.fiber_manual_record,
-        color: Color(taskList.color),
+        bucket.icon,
+        color: Color(bucket.iconColor),
       ),
       title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(taskList.name),
+            Text(bucket.name),
             isEditable
                 ? GestureDetector(
                     child: Icon(
@@ -32,14 +35,12 @@ class TaskListTile extends StatelessWidget {
                       color: Colors.red,
                     ),
                     onTap: () => print('delete'))
-                : Text(taskList.count.toString()),
+                : Text(bucket.count.toString()),
           ]),
       trailing: isEditable
           ? GestureDetector(
               child: Icon(Icons.menu), onTap: () => print('humbger'))
-          : GestureDetector(
-              child: Icon(Icons.navigate_next),
-              onTap: () => onTapNext(taskList)),
+          : Icon(Icons.navigate_next),
     );
   }
 }

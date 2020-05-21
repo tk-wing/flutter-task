@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_task/data/task_list.dart';
+import 'package:flutter_task/resources/models/bucket.dart';
 
-class Filter extends BaseTaskList {
-  final Icon icon;
-
-  Filter({String name, int count = 0, this.icon}) : super(name: name, count: count);
-}
-
-List<Filter> defaultFilter = [
-  Filter(icon: Icon(Icons.today), name: '今日'),
-  Filter(icon: Icon(Icons.date_range), name: '近日中'),
-  Filter(icon: Icon(Icons.event_busy), name: '期限なし'),
-  Filter(icon: Icon(Icons.inbox), name: 'すべて'),
-  Filter(icon: Icon(Icons.assignment_turned_in), name: '完了したタスク'),
+List<Bucket> defaultFilter = [
+  Bucket(icon: Icons.today, name: '今日'),
+  Bucket(icon: Icons.date_range, name: '近日中'),
+  Bucket(icon: Icons.event_busy, name: '期限なし'),
+  Bucket(icon: Icons.inbox, name: 'すべて'),
+  Bucket(icon: Icons.assignment_turned_in, name: '完了したタスク'),
 ];

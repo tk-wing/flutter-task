@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_task/data/default_task_list.dart';
-import 'package:flutter_task/data/task_list.dart';
+import 'package:flutter_task/resources/models/bucket.dart';
 
-class TaskListScreen extends StatelessWidget {
-  final BaseTaskList taskList;
 
-  TaskListScreen({this.taskList});
+class BucketListScreen extends StatelessWidget {
+  final Bucket bucket;
+
+  BucketListScreen({this.bucket});
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(taskList.name),
+          title: Text(bucket.name),
           centerTitle: true,
         ),
       ),

@@ -23,7 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         // TODO HomeScreen Body
         body: _pages[_currentIndex],
-        bottomNavigationBar: BottomNavigationBar(items: const [
+        bottomNavigationBar: BottomNavigationBar(
+          items: const [
           BottomNavigationBarItem(
             icon: const Icon(Icons.list),
             title: const Text('リスト'),

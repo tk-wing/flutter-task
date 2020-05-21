@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_task/data/default_filter.dart';
-import 'package:flutter_task/data/default_task_list.dart';
-import 'package:flutter_task/data/task_list.dart';
+import 'package:flutter_task/resources/models/bucket.dart';
+import 'package:flutter_task/view/components/bucket_tile.dart';
 import 'package:flutter_task/view/components/filter_tile.dart';
-import 'package:flutter_task/view/components/task_list_tile.dart';
+import 'package:flutter_task/view/screens/list_input_screen.dart';
 import 'package:flutter_task/view/screens/task_list_screen.dart';
 import 'package:flutter_task/viewModel/list_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +15,17 @@ class ListPage extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          title: Text('リスト'),
+          backgroundColor: Colors.orange,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () => viewModel.onTapListEdit(),
+              color: Colors.black54,
+            )
+          ],
+        ),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           tooltip: 'タスク追加',
@@ -24,12 +35,17 @@ class ListPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 15.0, left: 8.0),
-                child: Text('フィルター', style: TextStyle(color: Colors.white70)),
-              ),
-              Divider(
-                color: Colors.grey,
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  border: Border(
+                    bottom: BorderSide(color: Colors.grey[400], width: 1.0),
+                  ),
+                ),
+                height: 35,
+                padding: EdgeInsets.only(top: 10.0, bottom: 5.0, left: 15.0),
+                width: MediaQuery.of(context).size.width,
+                child: Text('フィルター', style: TextStyle(color: Colors.grey[700])),
               ),
               SizedBox(
                 height: 200,
@@ -43,20 +59,19 @@ class ListPage extends StatelessWidget {
                   itemCount: defaultFilter.length,
                 ),
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(top: 30.0, left: 8.0, right: 8.0),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text('タスクリスト', style: TextStyle(color: Colors.white70)),
-                      GestureDetector(
-                          child: Icon(Icons.edit),
-                          onTap: () => viewModel.onTapListEdit()),
-                    ]),
-              ),
-              Divider(
-                color: Colors.grey,
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  border: Border(
+                    bottom: BorderSide(color: Colors.grey[400], width: 1.0),
+                  ),
+                ),
+                height: 35,
+                padding: EdgeInsets.only(top: 10.0, bottom: 5.0, left: 15.0),
+                margin: EdgeInsets.only(top: 20),
+                width: MediaQuery.of(context).size.width,
+                child:
+                    Text('タスクリスト', style: TextStyle(color: Colors.grey[700])),
               ),
               Consumer<ListViewModel>(
                 builder: (context, model, child) {
@@ -68,9 +83,9 @@ class ListPage extends StatelessWidget {
                       duration: Duration(milliseconds: 500),
                       transitionBuilder: (child, animation) {
                         return FadeTransition(
-                            child: child,
-                            opacity: animation,
-                            );
+                          child: child,
+                          opacity: animation,
+                        );
                       },
                       child: model.isEditable
                           ? ListTile(
@@ -80,7 +95,7 @@ class ListPage extends StatelessWidget {
                                   Icons.add_circle,
                                   color: Colors.lightGreenAccent[700],
                                 ),
-                                onTap: () => print('add task list'),
+                                onTap: () => _toListAddScreen(context),
                               ),
                               title: Text('タスクリスト追加'),
                             )
@@ -95,13 +110,15 @@ class ListPage extends StatelessWidget {
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemExtent: 40,
-                    itemBuilder: (context, int i) => TaskListTile(
-                      taskList: defaultTaskList[i],
+                    itemBuilder: (context, int i) => BucketTile(
+                      bucket: model.buckets[i],
                       isEditable: model.isEditable,
+                      onTapEdit: (taskList) =>
+                          _toListEditScreen(context, taskList),
                       onTapNext: (taskList) =>
                           _toTaskListScreen(taskList, context),
                     ),
-                    itemCount: defaultTaskList.length,
+                    itemCount: model.buckets.length,
                   );
                 },
               ),
@@ -112,10 +129,31 @@ class ListPage extends StatelessWidget {
     );
   }
 
-  _toTaskListScreen(BaseTaskList taskList, BuildContext context) {
+  void _toTaskListScreen(Bucket bucket, BuildContext context) {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => TaskListScreen(taskList: taskList)));
+            builder: (context) => BucketListScreen(bucket: bucket)));
+  }
+
+  void _toListEditScreen(BuildContext context, Bucket bucket) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BucketInputScreen(
+          status: InputStatus.EDIT,
+          bucket: bucket,
+        ),
+      ),
+    );
+  }
+
+  void _toListAddScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BucketInputScreen(status: InputStatus.ADD),
+      ),
+    );
   }
 }

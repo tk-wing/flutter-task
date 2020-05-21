@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_task/data/default_filter.dart';
+import 'package:flutter_task/resources/models/bucket.dart';
 
 class FilterTile extends StatelessWidget {
-  final Filter filter;
-  final ValueChanged<Filter> onTapNext;
+  final Bucket filter;
+  final ValueChanged<Bucket> onTapNext;
 
   FilterTile({@required this.filter, @required this.onTapNext});
 
@@ -11,8 +11,8 @@ class FilterTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       dense: true,
-      onTap: () => print('hogehoge'),
-      leading: filter.icon,
+      onTap: () => onTapNext(filter),
+      leading: Icon(filter.icon),
       title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -21,7 +21,7 @@ class FilterTile extends StatelessWidget {
               filter.count.toString(),
             )
           ]),
-      trailing: GestureDetector(child: Icon(Icons.navigate_next), onTap: () => onTapNext(filter)),
+      trailing: Icon(Icons.navigate_next),
     );
   }
 }
