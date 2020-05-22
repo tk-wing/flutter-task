@@ -21,14 +21,19 @@ class _TaskAppState extends State<TaskApp> {
     return MaterialApp(
       title: 'タスク管理アプリ',
       theme: ThemeData(
+        scaffoldBackgroundColor: Colors.grey[100],
         brightness: Brightness.light,
         primaryColor: Colors.orange,
         accentColor: Colors.orangeAccent,
-        primaryIconTheme: IconThemeData.fallback().copyWith(
+        fontFamily: 'Regular',
+        primaryIconTheme: const IconThemeData.fallback().copyWith(
           color: Colors.white,
         ),
-        primaryTextTheme: TextTheme(
-          title: TextStyle(
+        accentIconTheme: const IconThemeData.fallback().copyWith(
+          color: Colors.white,
+        ),
+        primaryTextTheme: const TextTheme(
+          title: const TextStyle(
             color: Colors.white,
           ),
         ),
