@@ -59,60 +59,135 @@ class ListPage extends StatelessWidget {
                   itemCount: defaultFilter.length,
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Colors.grey[400], width: 1.0),
-                  ),
-                ),
-                height: 35,
-                padding: EdgeInsets.only(top: 10.0, bottom: 5.0, left: 15.0),
-                margin: EdgeInsets.only(top: 15),
-                width: MediaQuery.of(context).size.width,
-                child:
-                    Text('タスクリスト', style: TextStyle(color: Colors.grey[700])),
-              ),
-              Consumer<ListViewModel>(
-                builder: (context, model, child) {
-                  return AnimatedContainer(
-                    curve: Curves.fastOutSlowIn,
-                    height: model.isEditable ? 40 : 0,
-                    duration: Duration(milliseconds: 300),
-                    child: AnimatedSwitcher(
-                      duration: Duration(milliseconds: 500),
-                      transitionBuilder: (child, animation) {
-                        return FadeTransition(
-                          child: child,
-                          opacity: animation,
-                        );
-                      },
-                      child: model.isEditable
-                          ? Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border(
-                                  bottom: BorderSide(
-                                      color: Colors.grey[400], width: 0.5),
-                                ),
+              Consumer<ListViewModel>(builder: (context, model, child) {
+                return AnimatedContainer(
+                  curve: Curves.fastOutSlowIn,
+                  duration: Duration(milliseconds: 500),
+                  height: model.isEditable ? 90.0 : 50.0,
+                  child: Stack(children: <Widget>[
+                    Positioned(
+                      top: 50,
+                      right: 0,
+                      left: 0,
+                      child: Container(
+                        height: 40,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border(
+                              bottom: BorderSide(
+                                  color: Colors.grey[400], width: 0.5),
+                            ),
+                          ),
+                          child: ListTile(
+                            dense: true,
+                            leading: GestureDetector(
+                              child: Icon(
+                                Icons.add_circle,
+                                color: Colors.lightGreenAccent[700],
                               ),
-                              height: 40,
-                              child: ListTile(
-                                dense: true,
-                                leading: GestureDetector(
-                                  child: Icon(
-                                    Icons.add_circle,
-                                    color: Colors.lightGreenAccent[700],
-                                  ),
-                                  onTap: () => _toListAddScreen(context),
-                                ),
-                                title: Text('タスクリスト追加'),
-                              ),
-                            )
-                          : Container(),
+                              onTap: () => _toListAddScreen(context),
+                            ),
+                            title: Text('タスクリスト追加'),
+                          ),
+                        ),
+                      ),
                     ),
-                  );
-                },
-              ),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom:
+                              BorderSide(color: Colors.grey[400], width: 1.0),
+                        ),
+                      ),
+                      height: 35,
+                      padding:
+                          EdgeInsets.only(top: 10.0, bottom: 5.0, left: 15.0),
+                      margin: EdgeInsets.only(top: 15),
+                      width: MediaQuery.of(context).size.width,
+                      child: Text('タスクリスト',
+                          style: TextStyle(color: Colors.grey[700])),
+                    ),
+                  ]),
+                );
+              }),
+
+              // Container(
+              //   decoration: BoxDecoration(
+              //     border: Border(
+              //       bottom: BorderSide(color: Colors.grey[400], width: 1.0),
+              //     ),
+              //   ),
+              //   height: 35,
+              //   padding: EdgeInsets.only(top: 10.0, bottom: 5.0, left: 15.0),
+              //   margin: EdgeInsets.only(top: 15),
+              //   width: MediaQuery.of(context).size.width,
+              //   child:
+              //       Text('タスクリスト', style: TextStyle(color: Colors.grey[700])),
+              // ),
+              // Container(
+              //   height: 40,
+              //   child: Container(
+              //     decoration: BoxDecoration(
+              //       color: Colors.white,
+              //       border: Border(
+              //         bottom: BorderSide(color: Colors.grey[400], width: 0.5),
+              //       ),
+              //     ),
+              //     child: ListTile(
+              //       dense: true,
+              //       leading: GestureDetector(
+              //         child: Icon(
+              //           Icons.add_circle,
+              //           color: Colors.lightGreenAccent[700],
+              //         ),
+              //         onTap: () => _toListAddScreen(context),
+              //       ),
+              //       title: Text('タスクリスト追加'),
+              //     ),
+              //   ),
+              // ),
+              // Consumer<ListViewModel>(
+              //   builder: (context, model, child) {
+              //     return AnimatedContainer(
+              //       curve: Curves.fastOutSlowIn,
+              //       height: model.isEditable ? 40 : 0,
+              //       duration: Duration(milliseconds: 300),
+              //       child: AnimatedSwitcher(
+              //         duration: Duration(milliseconds: 500),
+              //         transitionBuilder: (child, animation) {
+              //           return FadeTransition(
+              //             child: child,
+              //             opacity: animation,
+              //           );
+              //         },
+              //         child: model.isEditable
+              //             ? Container(
+              //                 decoration: BoxDecoration(
+              //                   color: Colors.white,
+              //                   border: Border(
+              //                     bottom: BorderSide(
+              //                         color: Colors.grey[400], width: 0.5),
+              //                   ),
+              //                 ),
+              //                 height: 40,
+              //                 child: ListTile(
+              //                   dense: true,
+              //                   leading: GestureDetector(
+              //                     child: Icon(
+              //                       Icons.add_circle,
+              //                       color: Colors.lightGreenAccent[700],
+              //                     ),
+              //                     onTap: () => _toListAddScreen(context),
+              //                   ),
+              //                   title: Text('タスクリスト追加'),
+              //                 ),
+              //               )
+              //             : Container(),
+              //       ),
+              //     );
+              //   },
+              // ),
               Consumer<ListViewModel>(
                 builder: (context, model, child) {
                   return ListView.builder(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_task/data/bucket_color.dart';
 import 'package:flutter_task/resources/models/bucket.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 
@@ -18,11 +19,16 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
   String _title = '';
   bool _isColorPick = false;
 
+  Color _selectedColor = Colors.orange;
+  TextEditingController _bucketNameController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     if (widget.status == InputStatus.EDIT) {
       _title = 'リスト編集';
+      _bucketNameController.text = widget.bucket.name;
+      _selectedColor = Color(widget.bucket.iconColor);
     } else {
       _title = 'リスト作成';
     }
@@ -58,10 +64,11 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
         ),
       ),
       child: TextField(
+        controller: _bucketNameController,
         keyboardType: TextInputType.text,
-        style: const TextStyle(fontSize: 20.0),
+        style: const TextStyle(fontSize: 15.0),
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.only(bottom: 10.0),
+          contentPadding: const EdgeInsets.only(bottom: 5.0),
           hintText: 'リスト名',
           hintStyle: const TextStyle(fontSize: 15.0),
           border: InputBorder.none,
@@ -74,7 +81,6 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
     return InkWell(
       onTap: () => {
         setState(() {
-          print('hogehoge');
           _isColorPick = _isColorPick != true;
         })
       },
@@ -82,7 +88,6 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
         curve: Curves.fastOutSlowIn,
         duration: Duration(milliseconds: 500),
         height: _isColorPick ? 85.0 : 40.0,
-        width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(horizontal: 15.0),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -92,9 +97,12 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
           ),
         ),
         child: Stack(
+          fit: StackFit.loose,
           children: <Widget>[
             Positioned(
               top: 40,
+              left: 0,
+              right: 0,
               child: _selectColor(),
             ),
             Positioned(
@@ -104,11 +112,16 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(
-                      'リストの色',
-                      style: TextStyle(color: Colors.grey[700]),
-                    ),
-                    Icon(Icons.fiber_manual_record),
+                    _isColorPick
+                        ? Text(
+                            '色の選択',
+                            style: TextStyle(color: Colors.black),
+                          )
+                        : Text(
+                            'リストの色',
+                            style: TextStyle(color: Colors.grey[700]),
+                          ),
+                    Icon(Icons.fiber_manual_record, color: _selectedColor),
                   ],
                 ),
               ),
@@ -125,31 +138,24 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
       height: 40.0,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          IconButton(
-              icon: Icon(
-                Icons.fiber_manual_record,
-                color: Colors.redAccent,
-              ),
-              onPressed: null),
-          IconButton(
-              icon: Icon(Icons.fiber_manual_record, color: Colors.green),
-              onPressed: null),
-          IconButton(
-              icon: Icon(Icons.fiber_manual_record, color: Colors.lightBlue),
-              onPressed: null),
-          IconButton(
-              icon: Icon(Icons.fiber_manual_record, color: Colors.orange),
-              onPressed: null),
-          IconButton(
-              icon: Icon(Icons.fiber_manual_record,
-                  color: Colors.yellowAccent[700]),
-              onPressed: null),
-          IconButton(
-              icon: Icon(Icons.fiber_manual_record, color: Colors.grey),
-              onPressed: null),
-        ],
+        children: List<Widget>.generate(
+          bucketColors.length,
+          (int i) {
+            return IconButton(
+              icon: Icon(Icons.fiber_manual_record),
+              color: bucketColors[i],
+              onPressed: () => _onSelectedColor(bucketColors[i]),
+            );
+          },
+        ),
       ),
     );
+  }
+
+  void _onSelectedColor(Color color) {
+    setState(() {
+      _selectedColor = color;
+      _isColorPick = false;
+    });
   }
 }
