@@ -1,4 +1,4 @@
-package com.example.flutter_task
+package com.example.fluttertask
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

@@ -13,6 +13,8 @@ class ListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = Provider.of<ListViewModel>(context, listen: false);
 
+    Future(() => viewModel.getBuckets());
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -22,7 +24,7 @@ class ListPage extends StatelessWidget {
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.edit),
-              onPressed: () => viewModel.onTapListEdit(),
+              onPressed: () => viewModel.onTapBucketEdit(),
               color: Colors.black54,
             )
           ],
@@ -86,7 +88,9 @@ class ListPage extends StatelessWidget {
                                 Icons.add_circle,
                                 color: Colors.lightGreenAccent[700],
                               ),
-                              onTap: () => _toListAddScreen(context),
+                              onTap: () => model.isAddBucket
+                                  ? _toBucketAddScreen(context)
+                                  : _showUnableAddBucketAlert(context),
                             ),
                             title: Text('タスクリスト追加'),
                           ),
@@ -111,83 +115,6 @@ class ListPage extends StatelessWidget {
                   ]),
                 );
               }),
-
-              // Container(
-              //   decoration: BoxDecoration(
-              //     border: Border(
-              //       bottom: BorderSide(color: Colors.grey[400], width: 1.0),
-              //     ),
-              //   ),
-              //   height: 35,
-              //   padding: EdgeInsets.only(top: 10.0, bottom: 5.0, left: 15.0),
-              //   margin: EdgeInsets.only(top: 15),
-              //   width: MediaQuery.of(context).size.width,
-              //   child:
-              //       Text('タスクリスト', style: TextStyle(color: Colors.grey[700])),
-              // ),
-              // Container(
-              //   height: 40,
-              //   child: Container(
-              //     decoration: BoxDecoration(
-              //       color: Colors.white,
-              //       border: Border(
-              //         bottom: BorderSide(color: Colors.grey[400], width: 0.5),
-              //       ),
-              //     ),
-              //     child: ListTile(
-              //       dense: true,
-              //       leading: GestureDetector(
-              //         child: Icon(
-              //           Icons.add_circle,
-              //           color: Colors.lightGreenAccent[700],
-              //         ),
-              //         onTap: () => _toListAddScreen(context),
-              //       ),
-              //       title: Text('タスクリスト追加'),
-              //     ),
-              //   ),
-              // ),
-              // Consumer<ListViewModel>(
-              //   builder: (context, model, child) {
-              //     return AnimatedContainer(
-              //       curve: Curves.fastOutSlowIn,
-              //       height: model.isEditable ? 40 : 0,
-              //       duration: Duration(milliseconds: 300),
-              //       child: AnimatedSwitcher(
-              //         duration: Duration(milliseconds: 500),
-              //         transitionBuilder: (child, animation) {
-              //           return FadeTransition(
-              //             child: child,
-              //             opacity: animation,
-              //           );
-              //         },
-              //         child: model.isEditable
-              //             ? Container(
-              //                 decoration: BoxDecoration(
-              //                   color: Colors.white,
-              //                   border: Border(
-              //                     bottom: BorderSide(
-              //                         color: Colors.grey[400], width: 0.5),
-              //                   ),
-              //                 ),
-              //                 height: 40,
-              //                 child: ListTile(
-              //                   dense: true,
-              //                   leading: GestureDetector(
-              //                     child: Icon(
-              //                       Icons.add_circle,
-              //                       color: Colors.lightGreenAccent[700],
-              //                     ),
-              //                     onTap: () => _toListAddScreen(context),
-              //                   ),
-              //                   title: Text('タスクリスト追加'),
-              //                 ),
-              //               )
-              //             : Container(),
-              //       ),
-              //     );
-              //   },
-              // ),
               Consumer<ListViewModel>(
                 builder: (context, model, child) {
                   return ListView.builder(
@@ -196,8 +123,11 @@ class ListPage extends StatelessWidget {
                     itemBuilder: (context, int i) => BucketTile(
                       bucket: model.buckets[i],
                       isEditable: model.isEditable,
+                      onTapBucketDelete: (bucketEntity) => model.isDeleteable
+                          ? model.deleteBucket(bucketEntity)
+                          : _showUnableDeleteBucketAlert(context),
                       onTapEdit: (taskList) =>
-                          _toListEditScreen(context, taskList),
+                          _toBucketEditScreen(context, taskList),
                       onTapNext: (taskList) =>
                           _toTaskListScreen(taskList, context),
                     ),
@@ -212,14 +142,14 @@ class ListPage extends StatelessWidget {
     );
   }
 
-  void _toTaskListScreen(Bucket bucket, BuildContext context) {
+  void _toTaskListScreen(BucketEntity bucket, BuildContext context) {
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => BucketListScreen(bucket: bucket)));
   }
 
-  void _toListEditScreen(BuildContext context, Bucket bucket) {
+  void _toBucketEditScreen(BuildContext context, BucketEntity bucket) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -231,12 +161,46 @@ class ListPage extends StatelessWidget {
     );
   }
 
-  void _toListAddScreen(BuildContext context) {
+  void _toBucketAddScreen(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => BucketInputScreen(status: InputStatus.ADD),
       ),
     );
+  }
+
+  Future<void> _showUnableAddBucketAlert(BuildContext context) async {
+    await showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              title: Text('リスト追加'),
+              content: Text('リストの作成は最大３つまでです。'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('とじる'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            ));
+  }
+
+  Future<void> _showUnableDeleteBucketAlert(BuildContext context) async {
+    await showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              title: Text('リスト削除'),
+              content: Text('リストは最低１つ必要です。'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('とじる'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            ));
   }
 }

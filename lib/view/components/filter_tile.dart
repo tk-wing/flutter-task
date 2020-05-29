@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_task/resources/models/bucket.dart';
+import 'package:flutter_task/data/default_filter.dart';
 
 class FilterTile extends StatelessWidget {
-  final Bucket filter;
-  final ValueChanged<Bucket> onTapNext;
+  final DefualtFilter filter;
+  final ValueChanged<DefualtFilter> onTapNext;
 
   FilterTile({@required this.filter, @required this.onTapNext});
 

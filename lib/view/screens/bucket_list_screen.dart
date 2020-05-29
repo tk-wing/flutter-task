@@ -3,7 +3,7 @@ import 'package:flutter_task/resources/models/bucket.dart';
 
 
 class BucketListScreen extends StatelessWidget {
-  final Bucket bucket;
+  final BucketEntity bucket;
 
   BucketListScreen({this.bucket});
 

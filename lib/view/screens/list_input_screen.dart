@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_task/data/bucket_color.dart';
 import 'package:flutter_task/resources/models/bucket.dart';
-import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
+import 'package:flutter_task/viewModel/list_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 enum InputStatus { ADD, EDIT }
 
 class BucketInputScreen extends StatefulWidget {
   final InputStatus status;
-  final Bucket bucket;
+  final BucketEntity bucket;
 
   BucketInputScreen({@required this.status, this.bucket});
 
@@ -21,6 +22,7 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
 
   Color _selectedColor = Colors.orange;
   TextEditingController _bucketNameController = TextEditingController();
+
 
   @override
   void initState() {
@@ -41,6 +43,13 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
         appBar: AppBar(
           title: Text(this._title),
           centerTitle: true,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.done),
+              tooltip: '完了',
+              onPressed: () => _onClickDone(context),
+            ),
+          ],
         ),
         body: Column(children: <Widget>[
           SizedBox(height: 50.0),
@@ -157,5 +166,28 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
       _selectedColor = color;
       _isColorPick = false;
     });
+  }
+
+  //TODO 完了ボタン押下
+  void _onClickDone(BuildContext context) async{
+
+    final viewModel = Provider.of<ListViewModel>(context, listen: false);
+
+    if (widget.status == InputStatus.ADD) {
+      final bucket = BucketModel(
+        name: _bucketNameController.text,
+        iconColor: _selectedColor.value,
+      );
+
+      await viewModel.createBucket(bucket);
+
+    } else {
+      widget.bucket.name = _bucketNameController.text;
+      widget.bucket.iconColor = _selectedColor.value;
+
+      await viewModel.updateBucket(widget.bucket);
+    }
+
+    Navigator.of(context).pop();
   }
 }

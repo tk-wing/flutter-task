@@ -30,12 +30,22 @@ dependencies:
   # Provider
   provider: ^4.0.4
 
-  # Color Picker
-  flutter_material_color_picker: ^1.0.5
+  # Moor
+  moor: 3.1.0
+  moor_ffi: 0.6.0
+  path_provider:
+  path:
+
+  # Toast
+  toast: ^0.1.5
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  # Moor
+  moor_generator: 3.1.0
+  build_runner:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

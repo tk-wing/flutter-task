@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_task/resources/models/bucket.dart';
 
 class BucketTile extends StatelessWidget {
-  final Bucket bucket;
+  final BucketEntity bucket;
   final bool isEditable;
-  final ValueChanged<Bucket> onTapNext;
-  final ValueChanged<Bucket> onTapEdit;
+  final ValueChanged<BucketEntity> onTapBucketDelete;
+  final ValueChanged<BucketEntity> onTapNext;
+  final ValueChanged<BucketEntity> onTapEdit;
 
   BucketTile({
     @required this.bucket,
     @required this.isEditable,
+    @required this.onTapBucketDelete,
     @required this.onTapEdit,
     @required this.onTapNext,
   });
@@ -29,7 +31,7 @@ class BucketTile extends StatelessWidget {
         dense: true,
         onTap: isEditable ? () => onTapEdit(bucket) : () => onTapNext(bucket),
         leading: Icon(
-          bucket.icon,
+          Icons.fiber_manual_record,
           color: Color(bucket.iconColor),
         ),
         title: Row(
@@ -42,7 +44,8 @@ class BucketTile extends StatelessWidget {
                         Icons.remove_circle,
                         color: Colors.red,
                       ),
-                      onTap: () => print('delete'))
+                      onTap: () => onTapBucketDelete(bucket),
+                    )
                   : Text(bucket.count.toString()),
             ]),
         trailing: isEditable
