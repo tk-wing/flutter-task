@@ -1,55 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_task/resources/models/bucket.dart';
-import 'package:flutter_task/viewModel/list_viewmodel.dart';
-import 'package:toast/toast.dart';
+import 'package:flutter_task/models/bucket/bucket.dart';
 
-class BucketList extends StatefulWidget {
-  ListViewModel viewModel;
+class BucketList extends StatelessWidget {
+  final GlobalKey<AnimatedListState> animatedListKey;
+  final List<BucketEntity> bucketEntitles;
+  final bool isEditable;
+  final bool isDeletable;
+  final ValueChanged<BucketEntity> toBucketEditScreen;
+  final ValueChanged<BucketEntity> onTapBucketDelete;
 
-  BucketList({this.viewModel});
-
-  @override
-  _BucketListState createState() => _BucketListState();
-}
-
-class _BucketListState extends State<BucketList> {
-  final GlobalKey<AnimatedListState> _animatedListKey = GlobalKey();
-
-  List<BucketEntity> _buckets;
-  bool _isEditable;
-  bool _isDeletable;
-
-  @override
-  void initState() {
-    _buckets = widget.viewModel.buckets;
-    _isEditable = widget.viewModel.isEditable;
-    _isDeletable = widget.viewModel.isDeleteable;
-
-    _isEditable = true;
-    _isDeletable = true;
-    super.initState();
-  }
+  const BucketList({
+    @required this.animatedListKey,
+    @required this.bucketEntitles,
+    @required this.isEditable,
+    @required this.isDeletable,
+    @required this.toBucketEditScreen,
+    @required this.onTapBucketDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: AnimatedList(
-          key: _animatedListKey,
-          initialItemCount: _buckets.length,
-          itemBuilder: (context, index, animation) {
-            return _buildItem(_buckets[index], animation);
-          },
-        ),
-      ),
+    return AnimatedList(
+      key: animatedListKey,
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      initialItemCount: bucketEntitles.length,
+      itemBuilder: (context, index, animation) {
+        return _buildItem(context, bucketEntitles[index], animation);
+      },
     );
   }
 
-  Widget _buildItem(BucketEntity bucketEntity, Animation<double> animation) {
+  Widget _buildItem(BuildContext context, BucketEntity bucketEntity,
+      Animation<double> animation) {
     return SizeTransition(
       sizeFactor: animation,
       child: Container(
-        height: 40,
+        height: 38,
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border(
@@ -60,7 +47,7 @@ class _BucketListState extends State<BucketList> {
           enabled: true,
           dense: true,
           // TODO 編集画面orリスト一覧画面へ遷移
-          onTap: null,
+          onTap: () => isEditable ? toBucketEditScreen(bucketEntity) : null,
           leading: Icon(
             Icons.fiber_manual_record,
             color: Color(bucketEntity.iconColor),
@@ -69,23 +56,33 @@ class _BucketListState extends State<BucketList> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(bucketEntity.name),
-              _isEditable
-                  ? GestureDetector(
-                      child: Icon(
-                        Icons.remove_circle,
-                        color: Colors.red,
-                      ),
-                      //TODO バケット削除
-                      onTap: () async => _isDeletable
-                          ? await _onTapBacketDelete(bucketEntity)
-                          : _showUnableAddBucketAlert(context),
-                    )
-                  : Text(
-                      bucketEntity.count.toString(),
+              if (isEditable)
+                GestureDetector(
+                    child: Icon(
+                      Icons.remove_circle,
+                      color: Colors.red,
                     ),
+                    onTap: () {
+                      if (isDeletable) {
+                        onTapBucketDelete(bucketEntity);
+                        final int removeIndex =
+                            bucketEntitles.indexOf(bucketEntity);
+                        animatedListKey.currentState.removeItem(
+                          removeIndex,
+                          (context, animation) =>
+                              _buildItem(context, bucketEntity, animation),
+                        );
+                      } else {
+                        _showUnableDeleteBucketAlert(context);
+                      }
+                    })
+              else
+                Text(
+                  bucketEntity.count.toString(),
+                ),
             ],
           ),
-          trailing: _isEditable
+          trailing: isEditable
               ? GestureDetector(
                   child: Icon(Icons.menu),
                   //TODO 並び替え
@@ -97,83 +94,20 @@ class _BucketListState extends State<BucketList> {
     );
   }
 
-  _onTapBacketDelete(BucketEntity bucketEntity) async {
-    try {
-      await widget.viewModel.deleteBucket(bucketEntity);
-
-      final removeIndex = _buckets.indexOf(bucketEntity);
-      final removedItem = _buckets.removeAt(removeIndex);
-
-      _animatedListKey.currentState.removeItem(
-        removeIndex,
-        (context, animation) => _buildItem(removedItem, animation),
-      );
-    } on Exception catch (error) {
-      Toast.show('リストの削除に失敗しました', context, duration: Toast.LENGTH_LONG);
-    }
-  }
-
-  Future<void> _showUnableAddBucketAlert(BuildContext context) async {
-    await showDialog(
+  Future<void> _showUnableDeleteBucketAlert(BuildContext context) async {
+    await showDialog<void>(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text('リスト追加'),
-        content: Text('リストの作成は最大３つまでです。'),
+        title: const Text('リスト削除'),
+        content: const Text('リストは最低１つ必要です。'),
         actions: <Widget>[
           FlatButton(
-            child: Text('とじる'),
+            child: const Text('とじる'),
             onPressed: () {
               Navigator.pop(context);
             },
           )
         ],
-      ),
-    );
-  }
-}
-
-class SamplePage2 extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => SamplePage2State();
-}
-
-class SamplePage2State extends State<SamplePage2> {
-  final GlobalKey<AnimatedListState> _listKey = GlobalKey();
-  final _data = ['data1', 'data2', 'data3', 'data4', 'data5'];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Sample Page 2')),
-      body: AnimatedList(
-        key: _listKey,
-        initialItemCount: _data.length,
-        itemBuilder: (BuildContext context, int index, Animation animation) {
-          return _buildItem(_data[index], animation);
-        },
-      ),
-    );
-  }
-
-  Widget _buildItem(String item, Animation animation) {
-    return SizeTransition(
-      sizeFactor: animation,
-      child: ListTile(
-        title: Text(item),
-        onTap: () {
-          // 内部データを消す
-          var removeIndex = _data.indexOf(item);
-          String removedItem = _data.removeAt(removeIndex);
-
-          // 削除アニメーションで利用されるウィジェットのビルダ関数
-          // 削除前のものと同じ描画内容にするといい感じに消える
-          AnimatedListRemovedItemBuilder builder = (context, animation) {
-            return _buildItem(removedItem, animation);
-          };
-
-          // ウィジェット上から削除を実行する
-          _listKey.currentState.removeItem(removeIndex, builder);
-        },
       ),
     );
   }

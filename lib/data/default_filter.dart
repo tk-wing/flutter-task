@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_task/resources/models/bucket.dart';
+import 'package:flutter_task/models/bucket/bucket.dart';
 
 class DefualtFilter implements BucketEntity {
   IconData icon;

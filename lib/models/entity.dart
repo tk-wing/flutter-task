@@ -3,6 +3,6 @@ abstract class BaseEntity {
   int get id => _id;
   set id(int id) => _id = id;
 
-  BaseEntity({id}):
+  BaseEntity({int id}):
     this._id = id;
 }

@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_task/data/bucket_color.dart';
-import 'package:flutter_task/resources/models/bucket.dart';
-import 'package:flutter_task/viewModel/list_viewmodel.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_task/models/bucket/bucket.dart';
+import 'package:path/path.dart';
 
-enum InputStatus { ADD, EDIT }
+enum InputStatus { CREATE, EDIT }
 
 class BucketInputScreen extends StatefulWidget {
   final InputStatus status;
-  final BucketEntity bucket;
+  final BucketEntity bucketEntity;
+  final ValueChanged<BucketEntity> onPressedSave;
 
-  BucketInputScreen({@required this.status, this.bucket});
+  const BucketInputScreen({
+    @required this.status,
+    @required this.onPressedSave,
+    this.bucketEntity,
+    });
 
   @override
   _BucketInputScreenState createState() => _BucketInputScreenState();
@@ -20,17 +24,18 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
   String _title = '';
   bool _isColorPick = false;
 
-  Color _selectedColor = Colors.orange;
-  TextEditingController _bucketNameController = TextEditingController();
+  BucketEntity get bucketEntity => widget.bucketEntity;
 
+  Color _selectedColor = Colors.orange;
+  final TextEditingController _bucketNameController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     if (widget.status == InputStatus.EDIT) {
       _title = 'リスト編集';
-      _bucketNameController.text = widget.bucket.name;
-      _selectedColor = Color(widget.bucket.iconColor);
+      _bucketNameController.text = bucketEntity.name;
+      _selectedColor = Color(bucketEntity.iconColor);
     } else {
       _title = 'リスト作成';
     }
@@ -47,14 +52,16 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
             IconButton(
               icon: Icon(Icons.done),
               tooltip: '完了',
-              onPressed: () => _onClickDone(context),
-            ),
+              onPressed: () => _onPressedSave(context),
+            )
           ],
         ),
         body: Column(children: <Widget>[
-          SizedBox(height: 50.0),
+          const SizedBox(height: 50.0),
+          // バケット名入力パート
           _bucketNameInputPart(),
-          SizedBox(height: 50.0),
+          const SizedBox(height: 50.0),
+          // バケットアイコンカラー選択パート
           _bucketIconColorSelectPart(),
         ]),
       ),
@@ -95,7 +102,7 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
       },
       child: AnimatedContainer(
         curve: Curves.fastOutSlowIn,
-        duration: Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 500),
         height: _isColorPick ? 85.0 : 40.0,
         padding: const EdgeInsets.symmetric(horizontal: 15.0),
         decoration: BoxDecoration(
@@ -121,15 +128,16 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    _isColorPick
-                        ? Text(
-                            '色の選択',
-                            style: TextStyle(color: Colors.black),
-                          )
-                        : Text(
-                            'リストの色',
-                            style: TextStyle(color: Colors.grey[700]),
-                          ),
+                    if (_isColorPick)
+                      Text(
+                        '色の選択',
+                        style: TextStyle(color: Colors.black),
+                      )
+                    else
+                      Text(
+                        'リストの色',
+                        style: TextStyle(color: Colors.grey[700]),
+                      ),
                     Icon(Icons.fiber_manual_record, color: _selectedColor),
                   ],
                 ),
@@ -169,25 +177,17 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
   }
 
   //TODO 完了ボタン押下
-  void _onClickDone(BuildContext context) async{
-
-    final viewModel = Provider.of<ListViewModel>(context, listen: false);
-
-    if (widget.status == InputStatus.ADD) {
-      final bucket = BucketModel(
-        name: _bucketNameController.text,
-        iconColor: _selectedColor.value,
-      );
-
-      await viewModel.createBucket(bucket);
-
+  void _onPressedSave(BuildContext context) {
+    BucketEntity bucketEntityEntry;
+    if (widget.status == InputStatus.CREATE) {
+      bucketEntityEntry = BucketEntity(name: _bucketNameController.text, iconColor: _selectedColor.value);
     } else {
-      widget.bucket.name = _bucketNameController.text;
-      widget.bucket.iconColor = _selectedColor.value;
-
-      await viewModel.updateBucket(widget.bucket);
+      bucketEntityEntry = bucketEntity;
+      bucketEntityEntry.name = _bucketNameController.text;
+      bucketEntityEntry.iconColor = _selectedColor.value;
     }
 
-    Navigator.of(context).pop();
+    widget.onPressedSave(bucketEntityEntry);
+    Navigator.of(context).pop(bucketEntityEntry);
   }
 }

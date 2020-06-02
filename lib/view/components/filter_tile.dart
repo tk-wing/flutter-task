@@ -3,23 +3,17 @@ import 'package:flutter_task/data/default_filter.dart';
 
 class FilterTile extends StatelessWidget {
   final DefualtFilter filter;
-  final ValueChanged<DefualtFilter> onTapNext;
 
-  FilterTile({@required this.filter, @required this.onTapNext});
+  const FilterTile({@required this.filter});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 40,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          bottom: BorderSide(color: Colors.grey[400], width: 0.5),
-        ),
-      ),
+      color: Colors.white,
+      height: 38,
       child: ListTile(
         dense: true,
-        onTap: () => onTapNext(filter),
+        onTap: () => null,
         leading: Icon(filter.icon),
         title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

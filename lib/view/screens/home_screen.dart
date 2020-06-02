@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_task/view/components/bucket_list.dart';
-import 'package:flutter_task/view/screens/pages/calender_page.dart';
-import 'package:flutter_task/view/screens/pages/list_page.dart';
-import 'package:flutter_task/view/screens/pages/setting_page.dart';
-import 'package:flutter_task/viewModel/list_viewmodel.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_task/redux/actions/bucket_list_actions.dart';
+import 'package:flutter_task/redux/states/app_state.dart';
+import 'package:flutter_task/view/pages/bucket_list_page.dart';
+import 'package:flutter_task/view/pages/calender_page.dart';
+import 'package:flutter_task/view/pages/setting_page.dart';
+import 'package:redux/redux.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -16,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    ListPage(),
+    BucketListPage(),
     CalenderPage(),
     SettingPage(),
   ];
@@ -29,16 +29,16 @@ class _HomeScreenState extends State<HomeScreen> {
         bottomNavigationBar: BottomNavigationBar(
           items: const [
           BottomNavigationBarItem(
-            icon: const Icon(Icons.list),
-            title: const Text('リスト'),
+            icon: Icon(Icons.list),
+            title: Text('リスト'),
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.calendar_today),
-            title: const Text('カレンダー'),
+            icon: Icon(Icons.calendar_today),
+            title: Text('カレンダー'),
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.settings),
-            title: const Text('設定'),
+            icon: Icon(Icons.settings),
+            title: Text('設定'),
           ),
         ],
         onTap: (i) {
