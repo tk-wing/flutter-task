@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_task/view/styles/style.dart';
 
 class CustomDivider extends StatelessWidget {
   @override
@@ -6,7 +7,7 @@ class CustomDivider extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(color: Colors.grey[300], width: 1),
+          bottom: BorderSide(color: Color(defaultBorderColor), width: 1),
         ),
       ),
     );

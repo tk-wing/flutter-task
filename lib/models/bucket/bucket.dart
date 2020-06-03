@@ -15,5 +15,11 @@ class BucketEntity extends BaseEntity implements BucketModel {
 
   int count = 0;
 
-  BucketEntity({@required this.name, this.iconColor = 0xFFFF9800, int id}):super(id: id);
+  BucketEntity({@required this.name, this.iconColor = 0xFFFF9800});
+
+  BucketEntity.convertor({
+    @required int id,
+    @required this.name,
+    @required this.iconColor
+  }): super(id: id);
 }

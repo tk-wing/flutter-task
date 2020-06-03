@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_task/redux/actions/bucket_list_actions.dart';
+import 'package:flutter_task/redux/actions/bucket_actions.dart';
 import 'package:flutter_task/redux/states/app_state.dart';
 import 'package:flutter_task/view/components/bucket_edit_icon.dart';
 import 'package:redux/redux.dart';

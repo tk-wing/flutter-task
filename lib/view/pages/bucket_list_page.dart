@@ -4,6 +4,7 @@ import 'package:flutter_task/containers/bucket_list_container.dart';
 import 'package:flutter_task/data/default_filter.dart';
 import 'package:flutter_task/view/components/custom_divider.dart';
 import 'package:flutter_task/view/components/filter_tile.dart';
+import 'package:flutter_task/view/styles/style.dart';
 
 class BucketListPage extends StatelessWidget {
   @override
@@ -40,7 +41,7 @@ class BucketListPage extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border(
-                      bottom: BorderSide(color: Colors.grey[300], width: 1),
+                      bottom: BorderSide(color: Color(defaultBorderColor), width: 1),
                     ),
                   ),
                   child: ListView.separated(

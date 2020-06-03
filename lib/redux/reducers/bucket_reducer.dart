@@ -1,12 +1,12 @@
 import 'package:flutter_task/models/bucket/bucket.dart';
-import 'package:flutter_task/redux/actions/bucket_list_actions.dart';
-import 'package:flutter_task/redux/states/bucket_list_state.dart';
+import 'package:flutter_task/redux/actions/bucket_actions.dart';
+import 'package:flutter_task/redux/states/bucket_state.dart';
 import 'package:redux/redux.dart';
 
-// BUcket State & Reducers
+// バケット Reducers
 
-BucketListState bocketListReducer(BucketListState state, dynamic action) {
-  return BucketListState(
+BucketState bocketListReducer(BucketState state, dynamic action) {
+  return BucketState(
     buckets: bucketsReducer(state.buckets, action),
     isEditable: bucketEditReducer(state.isEditable, action),
     isCreatable: bucketCreatableReducer(state.isCreatable, action),

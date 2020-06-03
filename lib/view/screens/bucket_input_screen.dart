@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_task/data/bucket_color.dart';
 import 'package:flutter_task/models/bucket/bucket.dart';
+import 'package:flutter_task/view/styles/style.dart';
 import 'package:path/path.dart';
 
 enum InputStatus { CREATE, EDIT }
@@ -68,6 +69,8 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
     );
   }
 
+
+  /// バケット名入力ウィジェット
   Widget _bucketNameInputPart() {
     return Container(
       height: 40.0,
@@ -75,8 +78,8 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(
-          top: BorderSide(color: Colors.grey[400], width: 0.5),
-          bottom: BorderSide(color: Colors.grey[400], width: 0.5),
+          top: BorderSide(color: Color(inputFormBorderColor), width: 0.5),
+          bottom: BorderSide(color: Color(inputFormBorderColor), width: 0.5),
         ),
       ),
       child: TextField(
@@ -93,6 +96,7 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
     );
   }
 
+  /// カラー選択ウィジェット
   Widget _bucketIconColorSelectPart() {
     return InkWell(
       onTap: () => {
@@ -108,8 +112,8 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border(
-            top: BorderSide(color: Colors.grey[400], width: 0.5),
-            bottom: BorderSide(color: Colors.grey[400], width: 0.5),
+            top: BorderSide(color: Color(inputFormBorderColor), width: 0.5),
+            bottom: BorderSide(color: Color(inputFormBorderColor), width: 0.5),
           ),
         ),
         child: Stack(
@@ -149,6 +153,7 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
     );
   }
 
+  /// カラーウィジェット
   Widget _selectColor() {
     return Container(
       color: Colors.white,
@@ -169,6 +174,7 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
     );
   }
 
+  /// カラー選択したときの処理
   void _onSelectedColor(Color color) {
     setState(() {
       _selectedColor = color;
@@ -176,7 +182,7 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
     });
   }
 
-  //TODO 完了ボタン押下
+  /// バケット新規作成・更新処理
   void _onPressedSave(BuildContext context) {
     BucketEntity bucketEntityEntry;
     if (widget.status == InputStatus.CREATE) {

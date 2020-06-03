@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_task/containers/bucket_create.dart';
 import 'package:flutter_task/containers/bucket_edit.dart';
+import 'package:flutter_task/containers/task_list_container.dart';
 import 'package:flutter_task/models/bucket/bucket.dart';
-import 'package:flutter_task/redux/actions/bucket_list_actions.dart';
+import 'package:flutter_task/redux/actions/bucket_actions.dart';
 import 'package:flutter_task/redux/states/app_state.dart';
 import 'package:flutter_task/view/components/bucket_list.dart';
 import 'package:flutter_task/view/components/bucket_list_head.dart';
-import 'package:flutter_task/view/screens/bucket_input_screen.dart';
+import 'package:flutter_task/view/screens/task_list_screen.dart';
 import 'package:redux/redux.dart';
 
 class BucketListContainer extends StatelessWidget {
@@ -32,6 +33,7 @@ class BucketListContainer extends StatelessWidget {
               isDeletable: viewModel.isDeletable,
               toBucketEditScreen: (bucketEntity) =>
                   _toBucketEditScreen(context, bucketEntity),
+              toTaskListScreen: (bucketEntity) => _toTaskListScreen(context, bucketEntity),
               onTapBucketDelete: viewModel.onTapBucketDelete,
             ),
           ],
@@ -60,6 +62,15 @@ class BucketListContainer extends StatelessWidget {
       context,
       MaterialPageRoute<void>(
         builder: (context) => BucketEdit(bucketEntity: bucketEntity),
+      ),
+    );
+  }
+
+  void _toTaskListScreen(BuildContext context, BucketEntity bucketEntity) {
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (context) => TasktListContainer(bucketEntity: bucketEntity),
       ),
     );
   }

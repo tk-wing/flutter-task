@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_task/models/bucket/bucket.dart';
+import 'package:flutter_task/view/styles/style.dart';
 
 class BucketList extends StatelessWidget {
   final GlobalKey<AnimatedListState> animatedListKey;
@@ -7,6 +8,7 @@ class BucketList extends StatelessWidget {
   final bool isEditable;
   final bool isDeletable;
   final ValueChanged<BucketEntity> toBucketEditScreen;
+  final ValueChanged<BucketEntity> toTaskListScreen;
   final ValueChanged<BucketEntity> onTapBucketDelete;
 
   const BucketList({
@@ -15,6 +17,7 @@ class BucketList extends StatelessWidget {
     @required this.isEditable,
     @required this.isDeletable,
     @required this.toBucketEditScreen,
+    @required this.toTaskListScreen,
     @required this.onTapBucketDelete,
   });
 
@@ -40,14 +43,13 @@ class BucketList extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border(
-            bottom: BorderSide(color: Colors.grey[400], width: 0.5),
+            bottom: BorderSide(color: Color(defaultBorderColor), width: 0.5),
           ),
         ),
         child: ListTile(
-          enabled: true,
           dense: true,
           // TODO 編集画面orリスト一覧画面へ遷移
-          onTap: () => isEditable ? toBucketEditScreen(bucketEntity) : null,
+          onTap: () => isEditable ? toBucketEditScreen(bucketEntity) : toTaskListScreen(bucketEntity),
           leading: Icon(
             Icons.fiber_manual_record,
             color: Color(bucketEntity.iconColor),
