@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_task/data/default_filter.dart';
 
 class FilterTile extends StatelessWidget {
-  final DefualtFilter filter;
+  final DefaultFilter filter;
 
   const FilterTile({@required this.filter});
 

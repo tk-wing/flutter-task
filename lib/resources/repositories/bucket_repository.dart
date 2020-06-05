@@ -5,21 +5,33 @@ import 'package:flutter_task/models/bucket/repository.dart';
 class BucketRepository implements IBucketRepository {
   @override
   Future<List<BucketEntity>> getAllBucket() async {
+    testBucketEntities.forEach((testBucketEntity) {
+      final taskCount = testTaskEntities
+          .where((testTaskEntity) =>
+              testTaskEntity.bucketId == testBucketEntity.id)
+          .toList()
+          .length;
+      testBucketEntity.count = taskCount;
+    });
+
     return testBucketEntities;
   }
 
   @override
-  Future<BucketEntity> createBucket(BucketModel bucketModel) async{
-    return BucketEntity(id: DateTime.now().millisecondsSinceEpoch, name: bucketModel.name, iconColor: bucketModel.iconColor);
+  Future<BucketEntity> createBucket(BucketModel bucketModel) async {
+    return BucketEntity(
+        id: DateTime.now().millisecondsSinceEpoch,
+        name: bucketModel.name,
+        iconColor: bucketModel.iconColor);
   }
 
   @override
-  Future<void> deleteBucket(int id) async{
+  Future<void> deleteBucket(int id) async {
     testBucketEntities.removeWhere((bucketEntity) => bucketEntity.id == id);
   }
 
   @override
-  Future<BucketEntity> updateBucket(BucketEntity bucketEntity) async{
+  Future<BucketEntity> updateBucket(BucketEntity bucketEntity) async {
     final index = testBucketEntities.indexOf(bucketEntity);
 
     final currentEntity = testBucketEntities[index];

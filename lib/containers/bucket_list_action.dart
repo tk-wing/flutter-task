@@ -35,26 +35,10 @@ class _ViewModel {
       }
     }
 
-    void checkCreateAvailability(Store<AppState> store) {
-      if (store.state.bucketState.buckets.length < 3) {
-        store.dispatch(CreatablenAction());
-      } else {
-        store.dispatch(UnCreatableAction());
-      }
-    }
-
-    void checkDeleteAvailability(Store<AppState> store) {
-      if (store.state.bucketState.buckets.length > 1) {
-        store.dispatch(DeletableAction());
-      } else {
-        store.dispatch(UndeletableAction());
-      }
-    }
-
     return _ViewModel(onTapBucketListEdit: () {
       changeEditAvailability(store);
-      checkCreateAvailability(store);
-      checkDeleteAvailability(store);
+      store.dispatch(CreateAvailabilityAction(store.state.bucketState.bucketEntities.length));
+      store.dispatch(DeleteAvailabilityAction(store.state.bucketState.bucketEntities.length));
     });
   }
 }

@@ -9,6 +9,7 @@ List<Middleware<AppState>> createTaskStoreMiddleware(
   return [
     TypedMiddleware<AppState, GetAllTasks>(_getAllTask(taskRepository)),
     TypedMiddleware<AppState, GetTasksByBucketIdAction>(_getTasksByBucketId(taskRepository)),
+    TypedMiddleware<AppState, GetTasksByDefaultFilterAction>(_getTasksByDefaultFilter(taskRepository)),
   ];
 }
 
@@ -29,6 +30,17 @@ void Function(Store<AppState> store, GetTasksByBucketIdAction action,
     next(action);
 
     final taskEntities = await taskRepository.getTasksByBucketId(action.id);
+
+    store.dispatch(SetTaskAction(taskEntities));
+  };
+}
+
+void Function(Store<AppState> store, GetTasksByDefaultFilterAction action,
+    NextDispatcher next) _getTasksByDefaultFilter(TaskRepository taskRepository) {
+  return (store, action, next) async {
+    next(action);
+
+    final taskEntities = await taskRepository.getTaskByDefaultFilter(action.filterType);
 
     store.dispatch(SetTaskAction(taskEntities));
   };

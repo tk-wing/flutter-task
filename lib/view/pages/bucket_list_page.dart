@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_task/containers/bucket_list_action.dart';
 import 'package:flutter_task/containers/bucket_list_container.dart';
+import 'package:flutter_task/containers/filter_bucket_list_container.dart';
 import 'package:flutter_task/data/default_filter.dart';
 import 'package:flutter_task/view/components/custom_divider.dart';
 import 'package:flutter_task/view/components/filter_tile.dart';
@@ -36,23 +37,8 @@ class BucketListPage extends StatelessWidget {
               ),
               CustomDivider(),
               // 日付フィルターリスト
-              SizedBox(
-                height: 195,
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(color: Color(defaultBorderColor), width: 1),
-                    ),
-                  ),
-                  child: ListView.separated(
-                    physics: const NeverScrollableScrollPhysics(),
-                    separatorBuilder: (context, index) => CustomDivider(),
-                    itemCount: defaultFilter.length,
-                    itemBuilder: (context, index) =>
-                        FilterTile(filter: defaultFilter[index]),
-                  ),
-                ),
-              ),
+              FilterBucketListContainer(),
+              // バケットリスト
               BucketListContainer(),
             ],
           ),

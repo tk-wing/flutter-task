@@ -10,7 +10,7 @@ List<Middleware<AppState>> createAppStoreMiddleware() {
   final taskRepository = TaskRepository();
   final bucketRepository = BucketRepository();
     return [
-      ...createBucketStoreMiddleware(bucketRepository),
+      ...createBucketStoreMiddleware(bucketRepository, taskRepository),
       ...createTaskStoreMiddleware(taskRepository),
   ];
 }
