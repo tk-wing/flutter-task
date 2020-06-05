@@ -21,7 +21,6 @@ class TasktListContainer extends StatelessWidget {
       builder: (context, viewModel) {
         return TaskListScreen(
           animatedListKey: _animatedListKey,
-          // isLoading: viewModel.isLoading,
           bucketEntity: bucketEntity,
           taskEntities: viewModel.taskEntities,
           onInit: viewModel.onInit,

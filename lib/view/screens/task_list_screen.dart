@@ -6,14 +6,12 @@ import 'package:flutter_task/view/components/task_list.dart';
 
 class TaskListScreen extends StatefulWidget {
   final GlobalKey<AnimatedListState> animatedListKey;
-  // final bool isLoading;
   final BucketEntity bucketEntity;
   final List<TaskEntity> taskEntities;
   final Function(int) onInit;
 
   const TaskListScreen({
     @required this.animatedListKey,
-    // this.isLoading,
     @required this.bucketEntity,
     @required this.taskEntities,
     @required this.onInit,
@@ -43,21 +41,18 @@ class _TaskListScreenState extends State<TaskListScreen> {
           tooltip: 'タスク追加',
           onPressed: null,
         ),
-        body: AppLoading(builder: (context, isLoading) {
-          return isLoading
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : TaskList(
-                  animatedListKey: widget.animatedListKey,
-                  taskEntities: widget.taskEntities,
-                );
-        }),
-        // ? const Center(child: CircularProgressIndicator())
-        // : TaskList(
-        //   animatedListKey: widget.animatedListKey,
-        //   taskEntities: widget.taskEntities,
-        // ),
+        body: AppLoading(
+          builder: (context, isLoading) {
+            return isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : TaskList(
+                    animatedListKey: widget.animatedListKey,
+                    taskEntities: widget.taskEntities,
+                  );
+          },
+        ),
       ),
     );
   }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_task/data/bucket_color.dart';
 import 'package:flutter_task/models/bucket/bucket.dart';
 import 'package:flutter_task/view/styles/style.dart';
-import 'package:path/path.dart';
 
 enum InputStatus { CREATE, EDIT }
 
