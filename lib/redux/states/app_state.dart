@@ -4,19 +4,24 @@ import 'package:flutter_task/redux/states/task_state.dart';
 
 @immutable
 class AppState {
-  final BucketState _bucketListState;
-  BucketState get bucketListState => _bucketListState;
+  final bool _isLoading;
+  bool get isLoading => _isLoading;
+
+  final BucketState _bucketState;
+  BucketState get bucketState => _bucketState;
 
   final TaskState _taskState;
   TaskState get taskState => _taskState;
 
-  const AppState({BucketState bucketListState, TaskState taskState}):
-    this._bucketListState = bucketListState,
+  const AppState({bool isLoading, BucketState bucketState, TaskState taskState}):
+    this._isLoading = isLoading,
+    this._bucketState = bucketState,
     this._taskState = taskState;
 
 
   AppState.initState():
-    this._bucketListState = BucketState.initState(),
+    this._isLoading = true,
+    this._bucketState = BucketState.initState(),
     this._taskState = TaskState.initState();
 }
 

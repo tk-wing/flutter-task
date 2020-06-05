@@ -21,7 +21,7 @@ class TasktListContainer extends StatelessWidget {
       builder: (context, viewModel) {
         return TaskListScreen(
           animatedListKey: _animatedListKey,
-          isLoading: viewModel.isLoading,
+          // isLoading: viewModel.isLoading,
           bucketEntity: bucketEntity,
           taskEntities: viewModel.taskEntities,
           onInit: viewModel.onInit,
@@ -40,7 +40,7 @@ class _ViewModel {
 
   static _ViewModel fromStore(Store<AppState> store) {
     return _ViewModel(
-      isLoading: store.state.taskState.isLoading,
+      isLoading: store.state.isLoading,
       taskEntities: store.state.taskState.tasks,
       onInit: (bucketId) => store.dispatch(
         GetTasksByBucketIdAction(bucketId),

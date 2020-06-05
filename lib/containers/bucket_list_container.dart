@@ -8,7 +8,6 @@ import 'package:flutter_task/redux/actions/bucket_actions.dart';
 import 'package:flutter_task/redux/states/app_state.dart';
 import 'package:flutter_task/view/components/bucket_list.dart';
 import 'package:flutter_task/view/components/bucket_list_head.dart';
-import 'package:flutter_task/view/screens/task_list_screen.dart';
 import 'package:redux/redux.dart';
 
 class BucketListContainer extends StatelessWidget {
@@ -17,6 +16,7 @@ class BucketListContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, _ViewModel>(
+      distinct: true,
       converter: _ViewModel.fromStore,
       builder: (context, viewModel) {
         return Column(
@@ -28,12 +28,14 @@ class BucketListContainer extends StatelessWidget {
             ),
             BucketList(
               animatedListKey: _animatedListKey,
-              bucketEntitles: viewModel.bucketEntities,
+              bucketEntities: viewModel.bucketEntities,
               isEditable: viewModel.isEditable,
               isDeletable: viewModel.isDeletable,
+              onInit: viewModel.onInit,
               toBucketEditScreen: (bucketEntity) =>
                   _toBucketEditScreen(context, bucketEntity),
-              toTaskListScreen: (bucketEntity) => _toTaskListScreen(context, bucketEntity),
+              toTaskListScreen: (bucketEntity) =>
+                  _toTaskListScreen(context, bucketEntity),
               onTapBucketDelete: viewModel.onTapBucketDelete,
             ),
           ],
@@ -77,32 +79,52 @@ class BucketListContainer extends StatelessWidget {
 }
 
 class _ViewModel {
+  // final bool isLoading;
   final bool isEditable;
   final bool isCreatable;
   final bool isDeletable;
   final List<BucketEntity> bucketEntities;
+  final VoidCallback onInit;
   final ValueChanged<BucketEntity> onTapBucketDelete;
 
   _ViewModel({
+    // @required this.isLoading,
     @required this.isEditable,
     @required this.isCreatable,
     @required this.isDeletable,
     @required this.bucketEntities,
+    @required this.onInit,
     @required this.onTapBucketDelete,
   });
 
   static _ViewModel fromStore(Store<AppState> store) {
+    void checkCreateAvailability(Store<AppState> store) {
+      if (store.state.bucketState.buckets.length < 3) {
+        store.dispatch(CreatablenAction());
+      } else {
+        store.dispatch(UnCreatableAction());
+      }
+    }
+
+    void checkDeleteAvailability(Store<AppState> store) {
+      if (store.state.bucketState.buckets.length > 1) {
+        store.dispatch(DeletableAction());
+      } else {
+        store.dispatch(UndeletableAction());
+      }
+    }
+
     return _ViewModel(
-      isEditable: store.state.bucketListState.isEditable,
-      isCreatable: store.state.bucketListState.isCreatable,
-      isDeletable: store.state.bucketListState.isDeletable,
-      bucketEntities: store.state.bucketListState.buckets,
+      // isLoading: store.state.isLoading,
+      isEditable: store.state.bucketState.isEditable,
+      isCreatable: store.state.bucketState.isCreatable,
+      isDeletable: store.state.bucketState.isDeletable,
+      bucketEntities: store.state.bucketState.buckets,
+      onInit: () => store.dispatch(GetAllBucketAction()),
       onTapBucketDelete: (bucketEntity) {
-        store.dispatch(BucketDeleteAction(bucket: bucketEntity));
-        store.dispatch(BucketCreatableAction(
-            store.state.bucketListState.buckets.length < 3));
-        store.dispatch(BucketDeletableAction(
-            store.state.bucketListState.buckets.length > 1));
+        store.dispatch(DeleteBucketAction(bucketEntity));
+        checkCreateAvailability(store);
+        checkDeleteAvailability(store);
       },
     );
   }

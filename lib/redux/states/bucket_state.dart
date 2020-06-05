@@ -20,7 +20,7 @@ class BucketState {
     this.isEditable = false,
     this.isCreatable = false,
     this.isDeletable = false,
-    this.buckets = testBucketEntities;
+    this.buckets = [];
 }
 
 

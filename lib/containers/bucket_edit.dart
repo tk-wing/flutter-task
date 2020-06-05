@@ -34,9 +34,7 @@ class _ViewModel {
   static _ViewModel fromStore(Store<AppState> store) {
     return _ViewModel(
       onPressedSave: (bucketEntity) {
-          store.dispatch(BucketUpdateAction(bucket: bucketEntity));
-          store.dispatch(BucketEditAction(isEditable: store.state.bucketListState.buckets.length < 3));
-          store.dispatch(BucketEditAction(isEditable: false));
+          store.dispatch(UpdateBucketAction(bucketEntity));
       }
     );
   }

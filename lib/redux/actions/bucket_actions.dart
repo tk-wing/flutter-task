@@ -1,47 +1,52 @@
 import 'package:flutter_task/models/bucket/bucket.dart';
 
-// バケット操作に関するアクション
 
-/// バケット編集可否
-class BucketEditAction {
-  final bool isEditable;
+// Bucket Availability
+class CreatablenAction {}
+class UnCreatableAction {}
+class EditableAction {}
+class UneditableAction {}
+class DeletableAction {}
+class UndeletableAction {}
 
-  BucketEditAction({this.isEditable});
+
+// 全バケット取得
+class GetAllBucketAction {}
+
+
+/// バケットのセット
+class SetBucketAction {
+  final List<BucketEntity> bucketEntites;
+
+  SetBucketAction(this.bucketEntites);
 }
 
-/// バケット作成判定
-class BucketCreatableAction {
-  final bool isCreatable;
+/// バケット追加
+class AddBucketAction {
+  final BucketEntity bucketEntity;
 
-  BucketCreatableAction(this.isCreatable);
-}
-
-/// バケット削除判定
-class BucketDeletableAction {
-  final bool isDeletable;
-
-  BucketDeletableAction(this.isDeletable);
+  AddBucketAction(this.bucketEntity);
 }
 
 /// バケット新規作成
-class BucketCreateAction {
-  final BucketEntity bucket;
+class CreateBucketAction {
+  final BucketModel bucketModel;
 
-  BucketCreateAction({this.bucket});
+  CreateBucketAction(this.bucketModel);
 }
 
 /// バケット更新
-class BucketUpdateAction {
-  final BucketEntity bucket;
+class UpdateBucketAction {
+  final BucketEntity bucketEntity;
 
-  BucketUpdateAction({this.bucket});
+  UpdateBucketAction(this.bucketEntity);
 }
 
 /// バケット削除
-class BucketDeleteAction {
-  final BucketEntity bucket;
+class DeleteBucketAction {
+  final BucketEntity bucketEntity;
 
-  BucketDeleteAction({this.bucket});
+  DeleteBucketAction(this.bucketEntity);
 }
 
 
