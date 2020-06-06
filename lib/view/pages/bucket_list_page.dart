@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_task/containers/bucket_list_action.dart';
 import 'package:flutter_task/containers/bucket_list_container.dart';
 import 'package:flutter_task/containers/filter_bucket_list_container.dart';
-import 'package:flutter_task/data/default_filter.dart';
 import 'package:flutter_task/view/components/custom_divider.dart';
-import 'package:flutter_task/view/components/filter_tile.dart';
-import 'package:flutter_task/view/styles/style.dart';
 
 class BucketListPage extends StatelessWidget {
   @override

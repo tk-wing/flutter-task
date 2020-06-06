@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_task/models/bucket/bucket.dart';
+import 'package:flutter_task/data/default_filter.dart';
 import 'package:flutter_task/models/task/task.dart';
 import 'package:flutter_task/redux/actions/task.action.dart';
 import 'package:flutter_task/redux/states/app_state.dart';
-import 'package:flutter_task/view/components/task_list.dart';
+import 'package:flutter_task/view/components/filter_task_list.dart';
 import 'package:redux/redux.dart';
 
-class TasktListContainer extends StatelessWidget {
-  final BucketEntity bucketEntity;
+class FilterTaskListContainer extends StatelessWidget {
+  final DefaultFilter defaultFilter;
 
-  const TasktListContainer({this.bucketEntity});
+  const FilterTaskListContainer({this.defaultFilter});
 
   @override
   Widget build(BuildContext context) {
@@ -18,27 +18,25 @@ class TasktListContainer extends StatelessWidget {
       distinct: true,
       converter: _ViewModel.fromStore,
       builder: (context, viewModel) =>
-      TaskList(
+      FilterTaskList(
         taskEntities: viewModel.taskEntities,
-        onInit: () => viewModel.onInit(bucketEntity.id),
-        )
+        onInit: () => viewModel.onInit(defaultFilter.filterType)
+        ),
     );
   }
 }
 
 class _ViewModel {
-  final bool isLoading;
   final List<TaskEntity> taskEntities;
-  final Function(int) onInit;
+  final Function(FilterType) onInit;
 
-  _ViewModel({@required this.isLoading, @required this.taskEntities, @required this.onInit});
+  _ViewModel({@required this.taskEntities, @required this.onInit});
 
   static _ViewModel fromStore(Store<AppState> store) {
     return _ViewModel(
-      isLoading: store.state.isLoading,
       taskEntities: store.state.taskState.tasks,
-      onInit: (bucketId) => store.dispatch(
-        GetTasksByBucketIdAction(bucketId),
+      onInit: (filterType) => store.dispatch(
+        GetTasksByDefaultFilterAction(filterType)
       ),
     );
   }

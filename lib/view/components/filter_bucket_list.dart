@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_task/data/default_filter.dart';
 import 'package:flutter_task/view/components/custom_divider.dart';
+import 'package:flutter_task/view/screens/filter_task_list_screen.dart';
 import 'package:flutter_task/view/styles/style.dart';
 
 class FilterBucketList extends StatefulWidget {
@@ -39,51 +40,39 @@ class _FilterBucketListState extends State<FilterBucketList> {
           physics: const NeverScrollableScrollPhysics(),
           separatorBuilder: (context, index) => CustomDivider(),
           itemCount: filteredBuckets.length,
-          itemBuilder: (context, index) => _buildItem(filteredBuckets[index]),
+          itemBuilder: (context, index) => _buildItem(context, filteredBuckets[index]),
         ),
       ),
     );
   }
 
-  Widget _buildItem(DefaultFilter filteredBucket) {
+  Widget _buildItem(BuildContext context, DefaultFilter defaultFilter) {
     return Container(
       color: Colors.white,
       height: 38,
       child: ListTile(
         dense: true,
-        onTap: () => null,
-        leading: Icon(filteredBucket.icon),
+        onTap: () => _toFilterTaskListScreen(context, defaultFilter),
+        leading: Icon(defaultFilter.icon),
         title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(filteredBucket.name),
+              Text(defaultFilter.name),
               Text(
-                filteredBucket.count.toString(),
+                defaultFilter.count.toString(),
               )
             ]),
         trailing: Icon(Icons.navigate_next),
       ),
     );
   }
+
+  void _toFilterTaskListScreen(BuildContext context, DefaultFilter defaultFilter) {
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (context) => FilterTaskListScreen(defaultFilter: defaultFilter),
+      ),
+    );
+  }
 }
-
-// class FilterBucketList extends StatelessWidget {
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//                   decoration: BoxDecoration(
-//                     border: Border(
-//                       bottom: BorderSide(color: Color(defaultBorderColor), width: 1),
-//                     ),
-//                   ),
-//                   child: ListView.separated(
-//                     physics: const NeverScrollableScrollPhysics(),
-//                     separatorBuilder: (context, index) => CustomDivider(),
-//                     itemCount: defaultFilterBuckets.length,
-//                     itemBuilder: (context, index) =>
-//                         FilterTile(filter: defaultFilterBuckets[index]),
-//                   ),
-//                 );
-//   }
-// }

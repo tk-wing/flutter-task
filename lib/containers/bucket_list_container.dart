@@ -8,6 +8,7 @@ import 'package:flutter_task/redux/actions/bucket_actions.dart';
 import 'package:flutter_task/redux/states/app_state.dart';
 import 'package:flutter_task/view/components/bucket_list.dart';
 import 'package:flutter_task/view/components/bucket_list_head.dart';
+import 'package:flutter_task/view/screens/task_list_screen.dart';
 import 'package:redux/redux.dart';
 
 class BucketListContainer extends StatelessWidget {
@@ -72,7 +73,7 @@ class BucketListContainer extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (context) => TasktListContainer(bucketEntity: bucketEntity),
+        builder: (context) => TaskListScreen(bucketEntity: bucketEntity),
       ),
     );
   }
