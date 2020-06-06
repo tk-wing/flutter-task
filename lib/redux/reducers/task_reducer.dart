@@ -15,6 +15,6 @@ final taskCRUDReducer = combineReducers<List<TaskEntity>>([
   TypedReducer<List<TaskEntity>, SetTaskAction>(_setTaskReducer),
 ]);
 
-
 /// タスクセット
 List<TaskEntity> _setTaskReducer(List<TaskEntity> state, SetTaskAction action) => action.tasks;
+

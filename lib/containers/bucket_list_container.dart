@@ -5,6 +5,7 @@ import 'package:flutter_task/containers/bucket_edit.dart';
 import 'package:flutter_task/containers/task_list_container.dart';
 import 'package:flutter_task/models/bucket/bucket.dart';
 import 'package:flutter_task/redux/actions/bucket_actions.dart';
+import 'package:flutter_task/redux/actions/task.action.dart';
 import 'package:flutter_task/redux/states/app_state.dart';
 import 'package:flutter_task/view/components/bucket_list.dart';
 import 'package:flutter_task/view/components/bucket_list_head.dart';
@@ -108,6 +109,7 @@ class _ViewModel {
         store.dispatch(DeleteBucketAction(bucketEntity));
         store.dispatch(CreateAvailabilityAction(store.state.bucketState.bucketEntities.length));
         store.dispatch(DeleteAvailabilityAction(store.state.bucketState.bucketEntities.length));
+        store.dispatch(DeleteTasksActionByBucketId(bucketEntity.id));
       },
     );
   }

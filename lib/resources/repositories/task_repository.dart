@@ -16,7 +16,7 @@ class TaskRepository implements ITaskRepository {
   }
 
   @override
-  Future<List<TaskEntity>> getTaskByDefaultFilter(FilterType filterType) async{
+  Future<List<TaskEntity>> getTaskByDefaultFilter(FilterType filterType) async {
     List<TaskEntity> taskEntities;
     final dateFormat = DateFormat('yyyy-MM-dd');
     final today = dateFormat.format(DateTime.now());
@@ -29,7 +29,8 @@ class TaskRepository implements ITaskRepository {
                   testTaskEntity.doneAt == null &&
                   testTaskEntity.expiredAt != null &&
                   dateFormat.format(testTaskEntity.expiredAt) == today,
-            ).toList();
+            )
+            .toList();
         break;
       case FilterType.UpComing:
         taskEntities = testTaskEntities
@@ -98,4 +99,20 @@ class TaskRepository implements ITaskRepository {
     return numberOfTask;
   }
 
+  @override
+  Future<void> deleteTask(int id) async {
+    testTaskEntities.removeWhere((testTaskEntity) => testTaskEntity.id == id);
+  }
+
+  @override
+  Future<void> deleteTasksByBucketId(int bucketId) async {
+    testTaskEntities.removeWhere((testTaskEntity) => testTaskEntity.bucketId == bucketId);
+  }
+
+  @override
+  Future<void> multiDeleteTask(List<int> ids) async{
+    ids.forEach((id) {
+      testTaskEntities.removeWhere((testTaskEntity) => testTaskEntity.id == id);
+    });
+  }
 }

@@ -5,10 +5,12 @@ import 'package:flutter_task/view/screens/filter_task_list_screen.dart';
 import 'package:flutter_task/view/styles/style.dart';
 
 class FilterBucketList extends StatefulWidget {
+  final bool isEditable;
   final List<DefaultFilter> filteredBuckets;
   final VoidCallback onInit;
 
   const FilterBucketList({
+    @required this.isEditable,
     @required this.filteredBuckets,
     @required this.onInit,
   });
@@ -18,6 +20,7 @@ class FilterBucketList extends StatefulWidget {
 }
 
 class _FilterBucketListState extends State<FilterBucketList> {
+  bool get isEditable => widget.isEditable;
   List<DefaultFilter> get filteredBuckets => widget.filteredBuckets;
 
   @override
@@ -51,17 +54,21 @@ class _FilterBucketListState extends State<FilterBucketList> {
       color: Colors.white,
       height: 38,
       child: ListTile(
+        enabled: !isEditable,
         dense: true,
         onTap: () => _toFilterTaskListScreen(context, defaultFilter),
         leading: Icon(defaultFilter.icon),
         title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(defaultFilter.name),
-              Text(
-                defaultFilter.count.toString(),
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(defaultFilter.name),
+            AnimatedOpacity(
+              opacity: isEditable ? 0.0 : 1.0,
+              duration: const Duration(milliseconds: 300),
+              child: Text(defaultFilter.count.toString()),
               )
-            ]),
+          ],
+        ),
         trailing: Icon(Icons.navigate_next),
       ),
     );

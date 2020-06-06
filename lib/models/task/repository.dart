@@ -10,4 +10,10 @@ abstract class ITaskRepository {
   Future<List<TaskEntity>> getTaskByDefaultFilter(FilterType filterType);
 
   Future<int> countTaskByDefaultFilter(FilterType filterType);
+
+  Future<void> deleteTask(int id);
+
+  Future<void> deleteTasksByBucketId(int bucketId);
+
+  Future<void> multiDeleteTask(List<int> ids);
 }

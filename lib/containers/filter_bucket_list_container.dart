@@ -13,6 +13,7 @@ class FilterBucketListContainer extends StatelessWidget {
       distinct: true,
       converter: _ViewModel.fromStore,
       builder: (context, viewModel) => FilterBucketList(
+        isEditable: viewModel.isEditable,
         filteredBuckets: viewModel.filteredBuckets,
         onInit: viewModel.onInit,
       ),
@@ -21,16 +22,19 @@ class FilterBucketListContainer extends StatelessWidget {
 }
 
 class _ViewModel {
+  final bool isEditable;
   final List<DefaultFilter> filteredBuckets;
   final VoidCallback onInit;
 
   _ViewModel({
+    @required this.isEditable,
     @required this.filteredBuckets,
     @required this.onInit,
   });
 
   static _ViewModel fromStore(Store<AppState> store) {
     return _ViewModel(
+      isEditable: store.state.bucketState.isEditable,
       filteredBuckets: store.state.bucketState.filteredBuckets,
       onInit: () => store.dispatch(GetFilteredBucketAction()),
     );

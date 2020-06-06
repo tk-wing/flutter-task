@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_task/models/bucket/bucket.dart';
 
 enum FilterType {
   Today,

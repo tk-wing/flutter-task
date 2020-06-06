@@ -27,3 +27,10 @@ class GetTasksByDefaultFilterAction {
 
   GetTasksByDefaultFilterAction(this.filterType);
 }
+
+/// タスク削除
+class DeleteTasksActionByBucketId {
+  final int bucketId;
+
+  DeleteTasksActionByBucketId(this.bucketId);
+}
