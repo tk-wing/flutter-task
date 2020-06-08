@@ -185,7 +185,7 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
   void _onPressedSave(BuildContext context) {
     BucketEntity bucketEntityEntry;
     if (widget.status == InputStatus.CREATE) {
-      bucketEntityEntry = BucketEntity(name: _bucketNameController.text, iconColor: _selectedColor.value);
+      bucketEntityEntry = BucketEntity(id: 3, name: _bucketNameController.text, iconColor: _selectedColor.value);
     } else {
       bucketEntityEntry = bucketEntity;
       bucketEntityEntry.name = _bucketNameController.text;

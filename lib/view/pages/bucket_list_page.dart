@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_task/containers/bucket_create.dart';
+import 'package:flutter_task/containers/bucket_edit.dart';
 import 'package:flutter_task/containers/bucket_list_action.dart';
 import 'package:flutter_task/containers/bucket_list_container.dart';
 import 'package:flutter_task/containers/filter_bucket_list_container.dart';
+import 'package:flutter_task/models/bucket/bucket.dart';
 import 'package:flutter_task/view/components/custom_divider.dart';
+import 'package:flutter_task/view/screens/task_list_screen.dart';
 
 class BucketListPage extends StatelessWidget {
+  final GlobalKey<AnimatedListState> _animatedListKey =
+      GlobalKey<AnimatedListState>();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -36,10 +43,41 @@ class BucketListPage extends StatelessWidget {
               // 日付フィルターリスト
               FilterBucketListContainer(),
               // バケットリスト
-              BucketListContainer(),
+              BucketListContainer(
+                  animatedListKey: _animatedListKey,
+                  toBucketCreateScreen: _toBucketCreateScreen,
+                  toBucketEditScreen: _toBucketEditScreen,
+                  toTaskListScreen: _toTaskListScreen),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _toBucketCreateScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute<BucketEntity>(
+        builder: (context) => BucketCreate(),
+      ),
+    ).then((bucketEntity) => _animatedListKey.currentState.insertItem(0));
+  }
+
+  void _toBucketEditScreen(BuildContext context, BucketEntity bucketEntity) {
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (context) => BucketEdit(bucketEntity: bucketEntity),
+      ),
+    );
+  }
+
+  void _toTaskListScreen(BuildContext context, BucketEntity bucketEntity) {
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (context) => TaskListScreen(bucketEntity: bucketEntity),
       ),
     );
   }

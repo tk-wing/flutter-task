@@ -5,12 +5,12 @@ import 'custom_divider.dart';
 class BucketListHead extends StatelessWidget {
   final bool isEditable;
   final bool isCreatable;
-  final VoidCallback toBucketAddScreen;
+  final Function(BuildContext) toBucketCreateScreen;
 
   const BucketListHead({
     @required this.isEditable,
     @required this.isCreatable,
-    @required this.toBucketAddScreen,
+    @required this.toBucketCreateScreen,
   });
 
   @override
@@ -34,7 +34,7 @@ class BucketListHead extends StatelessWidget {
                   child: ListTile(
                     dense: true,
                     onTap: () => isCreatable
-                        ? toBucketAddScreen()
+                        ? toBucketCreateScreen(context)
                         : _showUnableAddBucketAlert(context),
                     leading: GestureDetector(
                       child: Icon(

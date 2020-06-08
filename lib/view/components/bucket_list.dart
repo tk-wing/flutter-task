@@ -9,8 +9,8 @@ class BucketList extends StatefulWidget {
   final bool isEditable;
   final bool isDeletable;
   final VoidCallback onInit;
-  final ValueChanged<BucketEntity> toBucketEditScreen;
-  final ValueChanged<BucketEntity> toTaskListScreen;
+  final Function(BuildContext, BucketEntity) toBucketEditScreen;
+  final Function(BuildContext, BucketEntity) toTaskListScreen;
   final ValueChanged<BucketEntity> onTapBucketDelete;
 
   const BucketList({
@@ -74,8 +74,8 @@ class _BucketListState extends State<BucketList> {
           dense: true,
           // TODO 編集画面orリスト一覧画面へ遷移
           onTap: () => isEditable
-              ? widget.toBucketEditScreen(bucketEntity)
-              : widget.toTaskListScreen(bucketEntity),
+              ? widget.toBucketEditScreen(context, bucketEntity)
+              : widget.toTaskListScreen(context, bucketEntity),
           leading: Icon(
             Icons.fiber_manual_record,
             color: Color(bucketEntity.iconColor),
