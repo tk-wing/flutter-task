@@ -19,7 +19,7 @@ class BucketEdit extends StatelessWidget {
         return BucketInputScreen(
           status: InputStatus.EDIT,
           bucketEntity: bucketEntity,
-          onPressedSave: viewModel.onPressedSave,
+          onPressedUpdate: viewModel.onPressedUpdate,
           );
       }
     );
@@ -27,13 +27,13 @@ class BucketEdit extends StatelessWidget {
 }
 
 class _ViewModel {
-  final ValueChanged<BucketEntity> onPressedSave;
+  final ValueChanged<BucketEntity> onPressedUpdate;
 
-  _ViewModel({@required this.onPressedSave});
+  _ViewModel({@required this.onPressedUpdate});
 
   static _ViewModel fromStore(Store<AppState> store) {
     return _ViewModel(
-      onPressedSave: (bucketEntity) {
+      onPressedUpdate: (bucketEntity) {
           store.dispatch(UpdateBucketAction(bucketEntity));
       }
     );

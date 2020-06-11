@@ -28,48 +28,4 @@ class TaskListScreen extends StatelessWidget {
   }
 }
 
-// class TaskListScreen extends StatefulWidget {
-//   final GlobalKey<AnimatedListState> animatedListKey;
-//   final BucketEntity bucketEntity;
-//   final List<TaskEntity> taskEntities;
-//   final Function(int) onInit;
 
-//   const TaskListScreen({
-//     @required this.bucketEntity,
-//   });
-
-//   @override
-//   _TaskListScreenState createState() => _TaskListScreenState();
-// }
-
-// class _TaskListScreenState extends State<TaskListScreen> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return SafeArea(
-//       child: Scaffold(
-//         appBar: AppBar(
-//           title: Text(widget.bucketEntity.name),
-//           centerTitle: true,
-//         ),
-//         floatingActionButton: FloatingActionButton(
-//           child: Icon(Icons.add),
-//           tooltip: 'タスク追加',
-//           onPressed: null,
-//         ),
-//         body: TasktListContainer(bucketEntity: ,),
-//         // body: AppLoading(
-//         //   builder: (context, isLoading) {
-//         //     return isLoading
-//         //         ? const Center(
-//         //             child: CircularProgressIndicator(),
-//         //           )
-//         //         : TaskList(
-//         //             animatedListKey: widget.animatedListKey,
-//         //             taskEntities: widget.taskEntities,
-//         //           );
-//         //   },
-//         // ),
-//       ),
-//     );
-//   }
-// }

@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_task/data/bucket_color.dart';
 import 'package:flutter_task/models/bucket/bucket.dart';
 import 'package:flutter_task/view/styles/style.dart';
+import 'package:toast/toast.dart';
 
 enum InputStatus { CREATE, EDIT }
 
 class BucketInputScreen extends StatefulWidget {
   final InputStatus status;
   final BucketEntity bucketEntity;
-  final ValueChanged<BucketEntity> onPressedSave;
+  final ValueChanged<BucketModel> onPressedSave;
+  final ValueChanged<BucketEntity> onPressedUpdate;
 
   const BucketInputScreen({
     @required this.status,
-    @required this.onPressedSave,
+    this.onPressedSave,
+    this.onPressedUpdate,
     this.bucketEntity,
     });
 
@@ -183,16 +186,21 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
 
   /// バケット新規作成・更新処理
   void _onPressedSave(BuildContext context) {
-    BucketEntity bucketEntityEntry;
-    if (widget.status == InputStatus.CREATE) {
-      bucketEntityEntry = BucketEntity(id: 3, name: _bucketNameController.text, iconColor: _selectedColor.value);
-    } else {
-      bucketEntityEntry = bucketEntity;
-      bucketEntityEntry.name = _bucketNameController.text;
-      bucketEntityEntry.iconColor = _selectedColor.value;
+    if(_bucketNameController.text == '') {
+      Toast.show('バケット名を入力してください。', context, duration: Toast.LENGTH_LONG);
+      return;
     }
 
-    widget.onPressedSave(bucketEntityEntry);
-    Navigator.of(context).pop(bucketEntityEntry);
+    if (widget.status == InputStatus.CREATE) {
+      final bucketModel = BucketModel(name: _bucketNameController.text, iconColor: _selectedColor.value);
+      widget.onPressedSave(bucketModel);
+    } else {
+      bucketEntity.name = _bucketNameController.text;
+      bucketEntity.iconColor = _selectedColor.value;
+      widget.onPressedUpdate(bucketEntity);
+    }
+
+    _bucketNameController.clear();
+    Navigator.of(context).pop(true);
   }
 }

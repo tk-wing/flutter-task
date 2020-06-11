@@ -28,9 +28,12 @@ class App extends StatelessWidget {
             color: Colors.white,
           ),
           primaryTextTheme: const TextTheme(
-            title: TextStyle(
+            headline6: TextStyle(
               color: Colors.white,
             ),
+          ),
+          floatingActionButtonTheme: const FloatingActionButtonThemeData(
+            foregroundColor: Colors.white,
           ),
         ),
         home: HomeScreen(),

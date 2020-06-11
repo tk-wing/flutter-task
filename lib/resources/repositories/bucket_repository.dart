@@ -19,10 +19,14 @@ class BucketRepository implements IBucketRepository {
 
   @override
   Future<BucketEntity> createBucket(BucketModel bucketModel) async {
-    return BucketEntity(
+    final bucketEntity = BucketEntity(
         id: DateTime.now().millisecondsSinceEpoch,
         name: bucketModel.name,
         iconColor: bucketModel.iconColor);
+
+        testBucketEntities.add(bucketEntity);
+
+        return bucketEntity;
   }
 
   @override

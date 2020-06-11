@@ -22,14 +22,14 @@ class BucketCreate extends StatelessWidget {
 }
 
 class _ViewModel {
-  final ValueChanged<BucketEntity> onPressedSave;
+  final ValueChanged<BucketModel> onPressedSave;
 
   _ViewModel({@required this.onPressedSave});
 
   static _ViewModel fromStore(Store<AppState> store) {
     return _ViewModel(
-      onPressedSave: (bucketEntity) {
-          store.dispatch(CreateBucketAction(bucketEntity));
+      onPressedSave: (BucketModel bucketModel) {
+          store.dispatch(CreateBucketAction(bucketModel));
       }
     );
   }
