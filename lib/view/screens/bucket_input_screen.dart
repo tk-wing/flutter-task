@@ -164,11 +164,11 @@ class _BucketInputScreenState extends State<BucketInputScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: List<Widget>.generate(
           bucketColors.length,
-          (int i) {
+          (index) {
             return IconButton(
               icon: Icon(Icons.fiber_manual_record),
-              color: bucketColors[i],
-              onPressed: () => _onSelectedColor(bucketColors[i]),
+              color: bucketColors[index],
+              onPressed: () => _onSelectedColor(bucketColors[index]),
             );
           },
         ),

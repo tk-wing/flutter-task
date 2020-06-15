@@ -1,5 +1,6 @@
 import 'package:flutter_task/data/default_filter.dart';
 import 'package:flutter_task/data/test_data.dart';
+import 'package:flutter_task/models/date_format.dart';
 import 'package:flutter_task/models/task/repository.dart';
 import 'package:flutter_task/models/task/task.dart';
 import 'package:intl/intl.dart';
@@ -12,13 +13,15 @@ class TaskRepository implements ITaskRepository {
 
   @override
   Future<List<TaskEntity>> getTasksByBucketId(int bucketId) async {
-    return testTaskEntities.where((taskEntity) => taskEntity.bucketId == bucketId).toList();
+    return testTaskEntities
+        .where((taskEntity) => taskEntity.bucketId == bucketId)
+        .toList();
   }
 
   @override
   Future<List<TaskEntity>> getTaskByDefaultFilter(FilterType filterType) async {
     List<TaskEntity> taskEntities;
-    final dateFormat = DateFormat('yyyy-MM-dd');
+    final dateFormat = DateFormat(date);
     final today = dateFormat.format(DateTime.now());
     final oneWeekLater = dateFormat.parse(today).add(const Duration(days: 8));
     switch (filterType) {
@@ -43,14 +46,18 @@ class TaskRepository implements ITaskRepository {
         break;
       case FilterType.NoExpiration:
         taskEntities = testTaskEntities
-            .where((testTaskEntity) => testTaskEntity.doneAt == null && testTaskEntity.expiredAt == null)
+            .where((testTaskEntity) =>
+                testTaskEntity.doneAt == null &&
+                testTaskEntity.expiredAt == null)
             .toList();
         break;
       case FilterType.All:
         taskEntities = testTaskEntities;
         break;
       case FilterType.Done:
-        taskEntities = testTaskEntities.where((testTaskEntity) => testTaskEntity.doneAt != null).toList();
+        taskEntities = testTaskEntities
+            .where((testTaskEntity) => testTaskEntity.doneAt != null)
+            .toList();
         break;
     }
 
@@ -60,7 +67,7 @@ class TaskRepository implements ITaskRepository {
   @override
   Future<int> countTaskByDefaultFilter(FilterType filterType) async {
     int numberOfTask = 0;
-    final dateFormat = DateFormat('yyyy-MM-dd');
+    final dateFormat = DateFormat(date);
     final today = dateFormat.format(DateTime.now());
     final oneWeekLater = dateFormat.parse(today).add(const Duration(days: 8));
     switch (filterType) {
@@ -85,18 +92,37 @@ class TaskRepository implements ITaskRepository {
         break;
       case FilterType.NoExpiration:
         numberOfTask = testTaskEntities
-            .where((testTaskEntity) => testTaskEntity.doneAt == null && testTaskEntity.expiredAt == null)
+            .where((testTaskEntity) =>
+                testTaskEntity.doneAt == null &&
+                testTaskEntity.expiredAt == null)
             .length;
         break;
       case FilterType.All:
         numberOfTask = testTaskEntities.length;
         break;
       case FilterType.Done:
-        numberOfTask = testTaskEntities.where((testTaskEntity) => testTaskEntity.doneAt != null).length;
+        numberOfTask = testTaskEntities
+            .where((testTaskEntity) => testTaskEntity.doneAt != null)
+            .length;
         break;
     }
 
     return numberOfTask;
+  }
+
+  @override
+  Future<TaskEntity> createTask(TaskModel taskModel) async {
+    print(testTaskEntities.length);
+    final taksEntity = TaskEntity(
+      bucketId: taskModel.bucketId,
+      title: taskModel.title,
+      description: taskModel.description,
+      expiredAt: taskModel.expiredAt,
+    );
+
+    testTaskEntities.add(taksEntity);
+    print(testTaskEntities.length);
+    return taksEntity;
   }
 
   @override
@@ -106,11 +132,12 @@ class TaskRepository implements ITaskRepository {
 
   @override
   Future<void> deleteTasksByBucketId(int bucketId) async {
-    testTaskEntities.removeWhere((testTaskEntity) => testTaskEntity.bucketId == bucketId);
+    testTaskEntities
+        .removeWhere((testTaskEntity) => testTaskEntity.bucketId == bucketId);
   }
 
   @override
-  Future<void> multiDeleteTask(List<int> ids) async{
+  Future<void> multiDeleteTask(List<int> ids) async {
     ids.forEach((id) {
       testTaskEntities.removeWhere((testTaskEntity) => testTaskEntity.id == id);
     });

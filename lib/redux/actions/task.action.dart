@@ -28,7 +28,14 @@ class GetTasksByDefaultFilterAction {
   GetTasksByDefaultFilterAction(this.filterType);
 }
 
-/// タスク削除
+/// タスク作成
+class CreateTaskAction {
+  final TaskModel taskModel;
+
+  CreateTaskAction(this.taskModel);
+}
+
+/// バケットIDにてタスク削除
 class DeleteTasksActionByBucketId {
   final int bucketId;
 

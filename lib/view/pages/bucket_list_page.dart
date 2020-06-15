@@ -4,9 +4,9 @@ import 'package:flutter_task/containers/bucket_edit.dart';
 import 'package:flutter_task/containers/bucket_list_action.dart';
 import 'package:flutter_task/containers/bucket_list_container.dart';
 import 'package:flutter_task/containers/filter_bucket_list_container.dart';
+import 'package:flutter_task/containers/task_create.dart';
 import 'package:flutter_task/models/bucket/bucket.dart';
 import 'package:flutter_task/view/components/custom_divider.dart';
-import 'package:flutter_task/view/screens/task_input_screen.dart';
 import 'package:flutter_task/view/screens/task_list_screen.dart';
 
 class BucketListPage extends StatelessWidget {
@@ -27,7 +27,7 @@ class BucketListPage extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           tooltip: 'タスク追加',
-          onPressed: () => _toTaskInputScreen(context),
+          onPressed: () => _toTaskCreateScreen(context),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -88,10 +88,10 @@ class BucketListPage extends StatelessWidget {
     );
   }
 
-  void _toTaskInputScreen(BuildContext context) {
+  void _toTaskCreateScreen(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute<void>(builder: (context) => TaskInputScreen()),
+      MaterialPageRoute<void>(builder: (context) => TaskCreate()),
     );
   }
 }

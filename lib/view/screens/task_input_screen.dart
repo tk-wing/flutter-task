@@ -1,14 +1,32 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_task/models/bucket/bucket.dart';
+import 'package:flutter_task/models/date_format.dart';
+import 'package:flutter_task/models/task/task.dart';
+import 'package:flutter_task/view/screens/description_input_screen.dart';
 import 'package:flutter_task/view/styles/style.dart';
+import 'package:intl/intl.dart';
+import 'package:smart_select/smart_select.dart';
+import 'package:toast/toast.dart';
 
 class TaskInputScreen extends StatefulWidget {
+  final List<BucketEntity> bucketEntites;
+  final ValueChanged<TaskModel> onPressedSave;
+
+  const TaskInputScreen(
+      {@required this.bucketEntites, @required this.onPressedSave});
+
   @override
   _TaskInputScreenState createState() => _TaskInputScreenState();
 }
 
 class _TaskInputScreenState extends State<TaskInputScreen> {
+  List<BucketEntity> get bucketEntites => widget.bucketEntites;
+
   final TextEditingController _titleController = TextEditingController();
+  int _bucketId = 0;
+  String _description = '';
+  DateTime _expiredAt = null;
 
   @override
   Widget build(BuildContext context) {
@@ -22,24 +40,27 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
               icon: Icon(Icons.done),
               tooltip: '完了',
               // TODO タスク保存ボタン
-              onPressed: () => print('タスク保存ボタン'),
+              onPressed: () => _onPressedSave(context),
             )
           ],
         ),
-        body: Column(
-          children: <Widget>[
-            const SizedBox(height: 50.0),
-            // タスク名入力パート
-            _titleInputPart(),
-            const SizedBox(height: 30.0),
-            // 期日選択パート
-            _expireDateSelectPart(),
-            const SizedBox(height: 30.0),
-            // description入力パート
-            _descriptionInputPart(),
-            // リスト選択パート
-            _listSelectPart(),
-          ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height: 50.0),
+              // タスク名入力パート
+              _titleInputPart(),
+              const SizedBox(height: 30.0),
+              // 期日選択パート
+              _expireDateSelectPart(),
+              const SizedBox(height: 30.0),
+              // description入力パート
+              _descriptionInputPart(),
+              const SizedBox(height: 30.0),
+              // リスト選択パート
+              _listSelectPart(),
+            ],
+          ),
         ),
       ),
     );
@@ -48,7 +69,7 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
   Widget _titleInputPart() {
     return Container(
       height: 40.0,
-      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      padding: const EdgeInsets.symmetric(horizontal: 25.0),
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(
@@ -72,52 +93,127 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
 
   Widget _expireDateSelectPart() {
     return Container(
-        height: 40.0,
-        width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(
-            top: BorderSide(color: Color(inputFormBorderColor), width: 0.5),
-            bottom: BorderSide(color: Color(inputFormBorderColor), width: 0.5),
-          ),
+      height: 40.0,
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(color: Color(inputFormBorderColor), width: 0.5),
+          bottom: BorderSide(color: Color(inputFormBorderColor), width: 0.5),
         ),
-        child: const Text('期日パート'));
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          const Text('期日パート'),
+          Text(DateFormat(dateTime).format(DateTime.now())),
+        ],
+      ),
+    );
   }
 
   Widget _descriptionInputPart() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: Text(
-              'ノート',
-              style: TextStyle(color: Colors.grey[700]),
+    return InkWell(
+      onTap: () => _toDescriptionInputScreen(context),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+          Widget>[
+        Padding(
+          padding: const EdgeInsets.only(left: 25.0),
+          child: Text(
+            'ノート',
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          margin: const EdgeInsets.only(top: 5.0),
+          padding: const EdgeInsets.all(15.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border(
+              top: BorderSide(color: Color(inputFormBorderColor), width: 0.5),
+              bottom:
+                  BorderSide(color: Color(inputFormBorderColor), width: 0.5),
             ),
           ),
-          Container(
-            // height: 40.0,
-            width: MediaQuery.of(context).size.width,
-            margin: const EdgeInsets.only(top: 5.0),
-            padding: const EdgeInsets.all(15.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border(
-                top: BorderSide(color: Color(inputFormBorderColor), width: 0.5),
-                bottom:
-                    BorderSide(color: Color(inputFormBorderColor), width: 0.5),
-              ),
-            ),
-            child: const Text(
-                'ライセンスはテンプレート方針と制限あり百科んます以上、代表するれ意が著作権法的の引用主体性をいいれてはあるた、方針の書籍は、運用有し人を説明さことにおいて除外明瞭あっんばいるんあっ。一方、方針の括弧国は、方針の著作あり補足公式あっ文章で利用し、その文がして出典が引用さことで表現されます。',
-                style: TextStyle(letterSpacing: 0.8),
-                ),
-          )
-        ]);
+          child: Text(
+            _description,
+            style: const TextStyle(letterSpacing: 0.8),
+          ),
+        )
+      ]),
+    );
   }
 
   Widget _listSelectPart() {
-    return Container();
+    return Container(
+      // height: 40.0,
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(color: Color(inputFormBorderColor), width: 0.5),
+          bottom: BorderSide(color: Color(inputFormBorderColor), width: 0.5),
+        ),
+      ),
+      child: Center(
+        child: SmartSelect<int>.single(
+          value: _bucketId,
+          title: 'リスト',
+          options: SmartSelectOption.listFrom<int, BucketEntity>(
+            source: bucketEntites,
+            value: (index, bucketEntity) => bucketEntity.id,
+            title: (index, bucketEntity) => bucketEntity.name,
+          ),
+          onChange: (value) => {
+            setState(() {
+              _bucketId = value;
+            })
+          },
+          modalType: SmartSelectModalType.bottomSheet,
+        ),
+      ),
+    );
+  }
+
+  void _toDescriptionInputScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute<String>(
+        builder: (context) => DescriptionInputScreen(description: _description),
+      ),
+    ).then((description) {
+      if (description == null) {
+        return;
+      }
+      setState(() {
+        _description = description;
+      });
+    });
+  }
+
+  void _onPressedSave(BuildContext context) {
+    if (_titleController.text == '') {
+      Toast.show('バケット名を入力してください。', context, duration: Toast.LENGTH_LONG);
+      return;
+    }
+
+    if (_bucketId == 0) {
+      Toast.show('リストを選択してください。', context, duration: Toast.LENGTH_LONG);
+      return;
+    }
+
+    final taskModel = TaskModel(
+      bucketId: _bucketId,
+      title: _titleController.text,
+      description: _description == '' ? null : _description,
+      expiredAt: _expiredAt,
+    );
+
+    widget.onPressedSave(taskModel);
+
+    Navigator.of(context).pop();
   }
 }

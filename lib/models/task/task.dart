@@ -17,7 +17,7 @@ class TaskModel {
   TaskModel(
       {@required this.bucketId,
       @required this.title,
-      this.description = '',
+      this.description,
       this.expiredAt})
       : status = TaskStatus.OPEN;
 }
@@ -44,7 +44,7 @@ class TaskEntity extends BaseEntity implements TaskModel {
   TaskEntity(
       {@required this.bucketId,
       @required this.title,
-      this.description = '',
+      this.description,
       this.expiredAt,
       });
 
