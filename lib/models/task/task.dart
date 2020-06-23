@@ -22,7 +22,7 @@ class TaskModel {
       : status = TaskStatus.OPEN;
 }
 
-class TaskEntity extends BaseEntity implements TaskModel {
+class TaskEntity extends BaseEntity<TaskEntity> implements TaskModel {
   @override
   int bucketId;
 
@@ -41,12 +41,14 @@ class TaskEntity extends BaseEntity implements TaskModel {
   @override
   DateTime doneAt;
 
-  TaskEntity(
-      {@required this.bucketId,
-      @required this.title,
-      this.description,
-      this.expiredAt,
-      });
+  TaskEntity({
+    @required int id,
+    @required this.bucketId,
+    @required this.title,
+    this.description,
+    this.expiredAt,
+    this.doneAt,
+  }) : super(id: id);
 
   TaskEntity.converter({
     @required int id,
@@ -56,4 +58,15 @@ class TaskEntity extends BaseEntity implements TaskModel {
     this.expiredAt,
     this.doneAt,
   }) : super(id: id);
+
+  @override
+  TaskEntity clone() {
+    return TaskEntity(
+      id: this.id,
+      bucketId: this.bucketId,
+      title: this.title,
+      description: this.description,
+      expiredAt: this.expiredAt,
+    );
+  }
 }

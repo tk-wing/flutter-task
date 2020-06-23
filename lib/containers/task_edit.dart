@@ -7,26 +7,21 @@ import 'package:flutter_task/redux/states/app_state.dart';
 import 'package:flutter_task/view/screens/task_input_screen.dart';
 import 'package:redux/redux.dart';
 
-class TaskCreate extends StatelessWidget {
-  final bool isAdd;
-  final int bucketId;
+class TaskEdit extends StatelessWidget {
+  final TaskEntity taskEntity;
 
-  const TaskCreate({
-    this.isAdd = false,
-    this.bucketId = 0,
-  });
+  const TaskEdit({this.taskEntity});
 
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, _ViewModel>(
       converter: _ViewModel.fromStore,
       builder: (context, viewModel) {
-        return TaskInputScreen.create(
+        return TaskInputScreen.edit(
           bucketEntites: viewModel.bucketEntities,
-          onPressedSave: viewModel.onPressedSave,
-          bucketId: bucketId,
-          isAdd: isAdd,
-        );
+          taskEntity: taskEntity,
+          onPressedUpdate: viewModel.onPressedUpdate,
+          );
       },
     );
   }
@@ -34,15 +29,15 @@ class TaskCreate extends StatelessWidget {
 
 class _ViewModel {
   final List<BucketEntity> bucketEntities;
-  final Function(TaskModel, bool) onPressedSave;
+  final ValueChanged<TaskEntity> onPressedUpdate;
 
-  _ViewModel({@required this.bucketEntities, @required this.onPressedSave});
+  _ViewModel({@required this.bucketEntities, @required this.onPressedUpdate});
 
   static _ViewModel fromStore(Store<AppState> store) {
     return _ViewModel(
         bucketEntities: store.state.bucketState.bucketEntities,
-        onPressedSave: (taskModel, isAdd) {
-          store.dispatch(CreateTaskAction(taskModel: taskModel, isAdd: isAdd));
+        onPressedUpdate: (taskEntity) {
+          store.dispatch(UpdateTaskAction(taskEntity));
         });
   }
 }

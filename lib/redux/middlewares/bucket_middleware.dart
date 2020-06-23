@@ -13,7 +13,6 @@ List<Middleware<AppState>> createBucketStoreMiddleware(
     TypedMiddleware<AppState, GetFilteredBucketAction>(_getFilteredBucket(taskRepository)),
     TypedMiddleware<AppState, GetAllBucketAction>(_getAllBucket(bucketRepository)),
     TypedMiddleware<AppState, CreateBucketAction>(_createBucket(bucketRepository)),
-    TypedMiddleware<AppState, UpdateBucketAction>(_updateBucket(bucketRepository)),
     TypedMiddleware<AppState, DeleteBucketAction>(_deleteBucket(bucketRepository)),
   ];
 }
@@ -48,15 +47,6 @@ void Function(Store<AppState> store, CreateBucketAction action, NextDispatcher n
     final bucketEntity = await bucketRepository.createBucket(action.bucketModel);
 
     store.dispatch(AddBucketAction(bucketEntity));
-  };
-}
-
-void Function(Store<AppState> store, UpdateBucketAction action, NextDispatcher next) _updateBucket(
-    BucketRepository bucketRepository) {
-  return (store, action, next) async {
-    await bucketRepository.updateBucket(action.bucketEntity);
-
-    next(action);
   };
 }
 

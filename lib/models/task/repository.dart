@@ -13,6 +13,8 @@ abstract class ITaskRepository {
 
   Future<TaskEntity> createTask(TaskModel taskModel);
 
+  Future<void> updateTask(TaskEntity taskEntity);
+
   Future<void> deleteTask(int id);
 
   Future<void> deleteTasksByBucketId(int bucketId);

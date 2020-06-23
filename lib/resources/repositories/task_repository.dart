@@ -112,7 +112,6 @@ class TaskRepository implements ITaskRepository {
 
   @override
   Future<TaskEntity> createTask(TaskModel taskModel) async {
-    print(testTaskEntities.length);
     final taksEntity = TaskEntity(
       bucketId: taskModel.bucketId,
       title: taskModel.title,
@@ -121,7 +120,6 @@ class TaskRepository implements ITaskRepository {
     );
 
     testTaskEntities.add(taksEntity);
-    print(testTaskEntities.length);
     return taksEntity;
   }
 
@@ -141,5 +139,12 @@ class TaskRepository implements ITaskRepository {
     ids.forEach((id) {
       testTaskEntities.removeWhere((testTaskEntity) => testTaskEntity.id == id);
     });
+  }
+
+  @override
+  Future<void> updateTask(TaskEntity taskEntity) {
+    final index = testTaskEntities.indexWhere((testTaskEntity) => testTaskEntity.id == taskEntity.id);
+
+    testTaskEntities.insert(index, taskEntity);
   }
 }

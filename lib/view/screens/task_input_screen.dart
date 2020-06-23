@@ -9,12 +9,47 @@ import 'package:intl/intl.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:toast/toast.dart';
 
-class TaskInputScreen extends StatefulWidget {
-  final List<BucketEntity> bucketEntites;
-  final ValueChanged<TaskModel> onPressedSave;
+enum TaskInputStatus { CREATE, EDIT }
 
-  const TaskInputScreen(
-      {@required this.bucketEntites, @required this.onPressedSave});
+class TaskInputScreen extends StatefulWidget {
+  final TaskInputStatus status;
+  final List<BucketEntity> bucketEntites;
+  final TaskEntity taskEntity;
+  final void Function(TaskModel, bool) onPressedSave;
+  final ValueChanged<TaskEntity> onPressedUpdate;
+
+  final int bucketId;
+  final bool isAdd;
+
+  const TaskInputScreen({
+    @required this.bucketEntites,
+    this.status,
+    this.taskEntity,
+    this.onPressedSave,
+    this.onPressedUpdate,
+    this.bucketId = 0,
+    this.isAdd = false,
+  });
+
+  const TaskInputScreen.create({
+    @required this.bucketEntites,
+    @required this.onPressedSave,
+    this.status = TaskInputStatus.CREATE,
+    this.taskEntity,
+    this.onPressedUpdate,
+    this.bucketId = 0,
+    this.isAdd = false,
+  });
+
+  const TaskInputScreen.edit({
+    @required this.bucketEntites,
+    @required this.taskEntity,
+    @required this.onPressedUpdate,
+    this.status = TaskInputStatus.EDIT,
+    this.onPressedSave,
+    this.bucketId = 0,
+    this.isAdd = false,
+  });
 
   @override
   _TaskInputScreenState createState() => _TaskInputScreenState();
@@ -22,11 +57,28 @@ class TaskInputScreen extends StatefulWidget {
 
 class _TaskInputScreenState extends State<TaskInputScreen> {
   List<BucketEntity> get bucketEntites => widget.bucketEntites;
+  TaskEntity get taskEntity => widget.taskEntity;
 
   final TextEditingController _titleController = TextEditingController();
-  int _bucketId = 0;
-  String _description = '';
-  DateTime _expiredAt = null;
+  int _bucketId;
+  String _description;
+  DateTime _expiredAt;
+
+  @override
+  void initState() {
+    if (widget.bucketId != 0) {
+      _bucketId = widget.bucketId;
+    }
+
+    if (widget.status == TaskInputStatus.EDIT) {
+      _titleController.text = widget.taskEntity.title;
+      _bucketId = widget.taskEntity.bucketId;
+      _description = widget.taskEntity.description;
+      _expiredAt = widget.taskEntity.expiredAt;
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +111,7 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
               const SizedBox(height: 30.0),
               // リスト選択パート
               _listSelectPart(),
+              // Expanded(child: SizedBox()),
             ],
           ),
         ),
@@ -92,24 +145,73 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
   }
 
   Widget _expireDateSelectPart() {
-    return Container(
-      height: 40.0,
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          top: BorderSide(color: Color(inputFormBorderColor), width: 0.5),
-          bottom: BorderSide(color: Color(inputFormBorderColor), width: 0.5),
+    return InkWell(
+      onTap: () => _shpwDatePicker(),
+      child: Container(
+        height: 40.0,
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            top: BorderSide(color: Color(inputFormBorderColor), width: 0.5),
+            bottom: BorderSide(color: Color(inputFormBorderColor), width: 0.5),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            const Text('期日パート'),
+            _expiredAt != null
+                ? Text(DateFormat(dateTime).format(_expiredAt))
+                : Container()
+          ],
         ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          const Text('期日パート'),
-          Text(DateFormat(dateTime).format(DateTime.now())),
-        ],
-      ),
+    );
+  }
+
+  Future<Widget> _shpwDatePicker() async {
+    return await showCupertinoModalPopup<Widget>(
+      context: context,
+      semanticsDismissible: false,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CupertinoButton(
+                  child: const Text('削除'),
+                  onPressed: () {
+                    setState(() {
+                      _expiredAt = null;
+                    });
+                    Navigator.pop(context);
+                  },
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 5.0,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 150,
+              child: CupertinoDatePicker(
+                use24hFormat: true,
+                initialDateTime: taskEntity.expiredAt,
+                onDateTimeChanged: (DateTime newDateTime) {
+                  setState(() {
+                    _expiredAt = newDateTime;
+                  });
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -138,7 +240,7 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
             ),
           ),
           child: Text(
-            _description,
+            _description ?? '',
             style: const TextStyle(letterSpacing: 0.8),
           ),
         )
@@ -205,14 +307,23 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
       return;
     }
 
-    final taskModel = TaskModel(
-      bucketId: _bucketId,
-      title: _titleController.text,
-      description: _description == '' ? null : _description,
-      expiredAt: _expiredAt,
-    );
+    if (widget.status == TaskInputStatus.CREATE) {
+      final taskModel = TaskModel(
+        bucketId: _bucketId,
+        title: _titleController.text,
+        description: _description,
+        expiredAt: _expiredAt,
+      );
+      widget.onPressedSave(taskModel, widget.isAdd);
+    } else {
+      final cloneTaskEntity = taskEntity.clone();
+      cloneTaskEntity.bucketId = _bucketId;
+      cloneTaskEntity.title = _titleController.text;
+      cloneTaskEntity.description = _description;
+      cloneTaskEntity.expiredAt = _expiredAt;
 
-    widget.onPressedSave(taskModel);
+      widget.onPressedUpdate(cloneTaskEntity);
+    }
 
     Navigator.of(context).pop();
   }

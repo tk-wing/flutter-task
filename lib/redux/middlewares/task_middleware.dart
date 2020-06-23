@@ -12,6 +12,7 @@ List<Middleware<AppState>> createTaskStoreMiddleware(
     TypedMiddleware<AppState, GetTasksByBucketIdAction>(_getTasksByBucketId(taskRepository)),
     TypedMiddleware<AppState, GetTasksByDefaultFilterAction>(_getTasksByDefaultFilter(taskRepository)),
     TypedMiddleware<AppState, CreateTaskAction>(_createTask(taskRepository)),
+    TypedMiddleware<AppState, UpdateTaskAction>(_updateTask(taskRepository)),
     TypedMiddleware<AppState, DeleteTasksActionByBucketId>(_deleteTasksByBucketId(taskRepository)),
   ];
 }
@@ -29,7 +30,6 @@ Middleware<AppState> _getAllTask(TaskRepository taskRepository) {
 void Function(Store<AppState> store, GetTasksByBucketIdAction action, NextDispatcher next) _getTasksByBucketId(
     TaskRepository taskRepository) {
   return (store, action, next) async {
-    next(action);
 
     final taskEntities = await taskRepository.getTasksByBucketId(action.id);
 
@@ -44,6 +44,7 @@ void Function(Store<AppState> store, GetTasksByDefaultFilterAction action, NextD
 
     final taskEntities = await taskRepository.getTaskByDefaultFilter(action.filterType);
 
+
     store.dispatch(SetTaskAction(taskEntities));
   };
 }
@@ -53,10 +54,25 @@ void Function(Store<AppState> store, CreateTaskAction action, NextDispatcher nex
   return (store, action, next) async {
     next(action);
 
-    await taskRepository.createTask(action.taskModel);
+    final taskEntity = await taskRepository.createTask(action.taskModel);
+
+    if(action.isAdd) {
+      store.dispatch(AddTaskAction(taskEntity));
+    }
 
     store.dispatch(GetFilteredBucketAction());
     store.dispatch(GetAllBucketAction());
+  };
+}
+
+void Function(Store<AppState> store, UpdateTaskAction action, NextDispatcher next) _updateTask(
+    TaskRepository taskRepository) {
+  return (store, action, next) async {
+
+    await taskRepository.updateTask(action.taskEntity);
+
+    next(action);
+
   };
 }
 

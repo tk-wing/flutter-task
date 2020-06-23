@@ -9,8 +9,12 @@ import 'package:redux/redux.dart';
 
 class TasktListContainer extends StatelessWidget {
   final BucketEntity bucketEntity;
+  final Function(BuildContext, TaskEntity) toTaskEditScreen;
 
-  const TasktListContainer({this.bucketEntity});
+  const TasktListContainer({
+    @required this.bucketEntity,
+    @required this.toTaskEditScreen,
+    });
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +25,7 @@ class TasktListContainer extends StatelessWidget {
       TaskList(
         taskEntities: viewModel.taskEntities,
         onInit: () => viewModel.onInit(bucketEntity.id),
+        toTaskEditScreen: toTaskEditScreen,
         )
     );
   }
