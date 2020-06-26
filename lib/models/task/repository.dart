@@ -13,11 +13,11 @@ abstract class ITaskRepository {
 
   Future<TaskEntity> createTask(TaskModel taskModel);
 
-  Future<void> updateTask(TaskEntity taskEntity);
+  Future<bool> updateTask(TaskEntity taskEntity);
 
-  Future<void> deleteTask(int id);
+  Future<bool> deleteTask(int id);
 
-  Future<void> deleteTasksByBucketId(int bucketId);
+  Future<bool> deleteTasksByBucketId(int bucketId);
 
-  Future<void> multiDeleteTask(List<int> ids);
+  Future<bool> multiDeleteTask(List<int> ids);
 }

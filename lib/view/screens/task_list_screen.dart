@@ -40,8 +40,8 @@ class TaskListScreen extends StatelessWidget {
     );
   }
 
-  void _toTaskEditScreen(BuildContext context, TaskEntity taskEntity){
-    Navigator.push(
+  Future<void> _toTaskEditScreen(BuildContext context, TaskEntity taskEntity) async {
+    await Navigator.push(
       context,
       MaterialPageRoute<void>(builder: (context) => TaskEdit(taskEntity: taskEntity)),
     );

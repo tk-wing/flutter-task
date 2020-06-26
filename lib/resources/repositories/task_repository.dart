@@ -124,27 +124,32 @@ class TaskRepository implements ITaskRepository {
   }
 
   @override
-  Future<void> deleteTask(int id) async {
+  Future<bool> deleteTask(int id) async {
     testTaskEntities.removeWhere((testTaskEntity) => testTaskEntity.id == id);
+    return true;
   }
 
   @override
-  Future<void> deleteTasksByBucketId(int bucketId) async {
+  Future<bool> deleteTasksByBucketId(int bucketId) async {
     testTaskEntities
         .removeWhere((testTaskEntity) => testTaskEntity.bucketId == bucketId);
+        return true;
   }
 
   @override
-  Future<void> multiDeleteTask(List<int> ids) async {
+  Future<bool> multiDeleteTask(List<int> ids) async {
     ids.forEach((id) {
       testTaskEntities.removeWhere((testTaskEntity) => testTaskEntity.id == id);
     });
+    return true;
   }
 
   @override
-  Future<void> updateTask(TaskEntity taskEntity) {
+  Future<bool> updateTask(TaskEntity taskEntity) async {
     final index = testTaskEntities.indexWhere((testTaskEntity) => testTaskEntity.id == taskEntity.id);
 
-    testTaskEntities.insert(index, taskEntity);
+    testTaskEntities[index] = taskEntity;
+
+    return true;
   }
 }

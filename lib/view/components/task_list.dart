@@ -4,11 +4,13 @@ import 'package:flutter_task/models/task/task.dart';
 class TaskList extends StatefulWidget {
   final List<TaskEntity> taskEntities;
   final VoidCallback onInit;
-  final Function(BuildContext, TaskEntity) toTaskEditScreen;
+  final Function(TaskEntity) onPressedUpdate;
+  final Future<void> Function(BuildContext, TaskEntity) toTaskEditScreen;
 
   const TaskList({
     @required this.taskEntities,
     @required this.onInit,
+    @required this.onPressedUpdate,
     @required this.toTaskEditScreen,
   });
 
@@ -24,6 +26,7 @@ class _TaskListState extends State<TaskList> {
     widget.onInit();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -35,10 +38,22 @@ class _TaskListState extends State<TaskList> {
   Widget _buildItem(TaskEntity taskEntity, int currentIndex) {
     return Card(
       child: ListTile(
-        leading: Checkbox(value: taskEntity.doneAt != null, onChanged: (bool hoge) => print('hoge')),
+        leading: Checkbox(
+          value: taskEntity.doneAt != null,
+          onChanged: (_) => taskEntity.doneAt == null
+          ? _onPressedDone(taskEntity)
+          : _onPressedUndone(taskEntity)
+        ),
         title: Text(taskEntity.title),
-        subtitle: taskEntity.description != null ? Text(taskEntity.description, maxLines: 1) : null,
-        onTap: () => widget.toTaskEditScreen(context, taskEntity),
+        subtitle: taskEntity.description != null
+            ? Text(taskEntity.description, maxLines: 1)
+            : null,
+        onTap: () async {
+          await widget.toTaskEditScreen(context, taskEntity);
+          setState(() {
+            widget.onInit();
+          });
+        },
         trailing: GestureDetector(
           child: Icon(Icons.menu),
           // TODO 並び替え
@@ -46,5 +61,19 @@ class _TaskListState extends State<TaskList> {
         ),
       ),
     );
+  }
+
+  void _onPressedDone(TaskEntity taskEntity) {
+    final cloneTaskEntity = taskEntity.clone();
+    cloneTaskEntity.doneAt = DateTime.now();
+
+    widget.onPressedUpdate(cloneTaskEntity);
+  }
+
+  void _onPressedUndone(TaskEntity taskEntity) {
+    final cloneTaskEntity = taskEntity.clone();
+    cloneTaskEntity.doneAt = null;
+
+    widget.onPressedUpdate(cloneTaskEntity);
   }
 }

@@ -9,7 +9,7 @@ import 'package:redux/redux.dart';
 
 class TasktListContainer extends StatelessWidget {
   final BucketEntity bucketEntity;
-  final Function(BuildContext, TaskEntity) toTaskEditScreen;
+  final Future<void> Function(BuildContext, TaskEntity) toTaskEditScreen;
 
   const TasktListContainer({
     @required this.bucketEntity,
@@ -25,6 +25,7 @@ class TasktListContainer extends StatelessWidget {
       TaskList(
         taskEntities: viewModel.taskEntities,
         onInit: () => viewModel.onInit(bucketEntity.id),
+        onPressedUpdate: viewModel.onPressedUpdate,
         toTaskEditScreen: toTaskEditScreen,
         )
     );
@@ -35,8 +36,9 @@ class _ViewModel {
   final bool isLoading;
   final List<TaskEntity> taskEntities;
   final Function(int) onInit;
+  final Function(TaskEntity) onPressedUpdate;
 
-  _ViewModel({@required this.isLoading, @required this.taskEntities, @required this.onInit});
+  _ViewModel({@required this.isLoading, @required this.taskEntities, @required this.onInit, @required this.onPressedUpdate,});
 
   static _ViewModel fromStore(Store<AppState> store) {
     return _ViewModel(
@@ -45,6 +47,9 @@ class _ViewModel {
       onInit: (bucketId) => store.dispatch(
         GetTasksByBucketIdAction(bucketId),
       ),
+      onPressedUpdate: (taskEntity) {
+          store.dispatch(UpdateTaskAction(taskEntity));
+      }
     );
   }
 }

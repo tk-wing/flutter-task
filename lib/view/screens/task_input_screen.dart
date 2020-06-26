@@ -111,7 +111,6 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
               const SizedBox(height: 30.0),
               // リスト選択パート
               _listSelectPart(),
-              // Expanded(child: SizedBox()),
             ],
           ),
         ),
@@ -201,7 +200,7 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
               height: 150,
               child: CupertinoDatePicker(
                 use24hFormat: true,
-                initialDateTime: taskEntity.expiredAt,
+                initialDateTime: _expiredAt ?? DateTime.now(),
                 onDateTimeChanged: (DateTime newDateTime) {
                   setState(() {
                     _expiredAt = newDateTime;

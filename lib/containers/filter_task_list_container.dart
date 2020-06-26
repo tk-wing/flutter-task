@@ -9,8 +9,9 @@ import 'package:redux/redux.dart';
 
 class FilterTaskListContainer extends StatelessWidget {
   final DefaultFilter defaultFilter;
+  final Future<void> Function(BuildContext, TaskEntity) toTaskEditScreen;
 
-  const FilterTaskListContainer({this.defaultFilter});
+  const FilterTaskListContainer({@required this.defaultFilter, @required this.toTaskEditScreen});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,9 @@ class FilterTaskListContainer extends StatelessWidget {
       builder: (context, viewModel) =>
       FilterTaskList(
         taskEntities: viewModel.taskEntities,
-        onInit: () => viewModel.onInit(defaultFilter.filterType)
+        onInit: () => viewModel.onInit(defaultFilter.filterType),
+        onPressedUpdate: viewModel.onPressedUpdate,
+        toTaskEditScreen: toTaskEditScreen,
         ),
     );
   }
@@ -29,8 +32,9 @@ class FilterTaskListContainer extends StatelessWidget {
 class _ViewModel {
   final List<TaskEntity> taskEntities;
   final Function(FilterType) onInit;
+  final Function(TaskEntity) onPressedUpdate;
 
-  _ViewModel({@required this.taskEntities, @required this.onInit});
+  _ViewModel({@required this.taskEntities, @required this.onInit, @required this.onPressedUpdate});
 
   static _ViewModel fromStore(Store<AppState> store) {
     return _ViewModel(
@@ -38,6 +42,9 @@ class _ViewModel {
       onInit: (filterType) => store.dispatch(
         GetTasksByDefaultFilterAction(filterType)
       ),
+      onPressedUpdate: (taskEntity) {
+          store.dispatch(UpdateTaskAction(taskEntity));
+      }
     );
   }
 }

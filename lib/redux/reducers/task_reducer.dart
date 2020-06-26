@@ -40,16 +40,7 @@ List<TaskEntity> _taskCreateReducer(
 
 List<TaskEntity> _taskUpdateReducer(
     List<TaskEntity> state, UpdateTaskAction action) {
-  final index =
-      state.indexWhere((taskEntity) => taskEntity.id == action.taskEntity.id);
-
-  final previousTaskEntity = state[index];
-
-  if (previousTaskEntity.bucketId != action.taskEntity.bucketId) {
-    return List.from(state)..removeAt(index);
-  }
-
-  return List.from(state)..insert(index, action.taskEntity);
+  return state.map((taskEntity) => taskEntity.id == action.taskEntity.id ? action.taskEntity : taskEntity).toList();
 }
 
 /// タスクセット

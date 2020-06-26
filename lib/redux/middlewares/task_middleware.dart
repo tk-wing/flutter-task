@@ -72,7 +72,7 @@ void Function(Store<AppState> store, UpdateTaskAction action, NextDispatcher nex
     await taskRepository.updateTask(action.taskEntity);
 
     next(action);
-
+    store.dispatch(GetFilteredBucketAction());
   };
 }
 

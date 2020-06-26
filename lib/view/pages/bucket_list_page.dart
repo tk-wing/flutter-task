@@ -91,7 +91,7 @@ class BucketListPage extends StatelessWidget {
   void _toTaskCreateScreen(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute<void>(builder: (context) => TaskCreate()),
+      MaterialPageRoute<void>(builder: (context) => const TaskCreate()),
     );
   }
 }
