@@ -18,13 +18,13 @@ class FilterTaskListContainer extends StatelessWidget {
     return StoreConnector<AppState, _ViewModel>(
       distinct: true,
       converter: _ViewModel.fromStore,
-      builder: (context, viewModel) =>
-      FilterTaskList(
+      builder: (context, viewModel) => FilterTaskList(
         taskEntities: viewModel.taskEntities,
         onInit: () => viewModel.onInit(defaultFilter.filterType),
         onPressedUpdate: viewModel.onPressedUpdate,
+        onPressedDelete: viewModel.onPressedDelete,
         toTaskEditScreen: toTaskEditScreen,
-        ),
+      ),
     );
   }
 }
@@ -33,18 +33,25 @@ class _ViewModel {
   final List<TaskEntity> taskEntities;
   final Function(FilterType) onInit;
   final Function(TaskEntity) onPressedUpdate;
+  final Function(TaskEntity) onPressedDelete;
 
-  _ViewModel({@required this.taskEntities, @required this.onInit, @required this.onPressedUpdate});
+  _ViewModel({
+    @required this.taskEntities,
+    @required this.onInit,
+    @required this.onPressedUpdate,
+    @required this.onPressedDelete,
+  });
 
   static _ViewModel fromStore(Store<AppState> store) {
     return _ViewModel(
-      taskEntities: store.state.taskState.tasks,
-      onInit: (filterType) => store.dispatch(
-        GetTasksByDefaultFilterAction(filterType)
-      ),
-      onPressedUpdate: (taskEntity) {
+        taskEntities: store.state.taskState.tasks,
+        onInit: (filterType) => store.dispatch(GetTasksByDefaultFilterAction(filterType)),
+        onPressedUpdate: (taskEntity) {
           store.dispatch(UpdateTaskAction(taskEntity));
-      }
-    );
+        },
+        onPressedDelete: (taskEntity) {
+          store.dispatch(DeleteTaskAction(taskEntity));
+        }
+        );
   }
 }

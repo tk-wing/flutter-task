@@ -31,6 +31,7 @@ final taskCRUDReducer = combineReducers<List<TaskEntity>>([
   TypedReducer<List<TaskEntity>, SetTaskAction>(_setTaskReducer),
   TypedReducer<List<TaskEntity>, AddTaskAction>(_taskCreateReducer),
   TypedReducer<List<TaskEntity>, UpdateTaskAction>(_taskUpdateReducer),
+  TypedReducer<List<TaskEntity>, DeleteTaskAction>(_taskDeleteReducer),
 ]);
 
 List<TaskEntity> _taskCreateReducer(
@@ -41,6 +42,11 @@ List<TaskEntity> _taskCreateReducer(
 List<TaskEntity> _taskUpdateReducer(
     List<TaskEntity> state, UpdateTaskAction action) {
   return state.map((taskEntity) => taskEntity.id == action.taskEntity.id ? action.taskEntity : taskEntity).toList();
+}
+
+List<TaskEntity> _taskDeleteReducer(
+    List<TaskEntity> state, DeleteTaskAction action) {
+      return List.from(state)..remove(action.taskEntity);
 }
 
 /// タスクセット

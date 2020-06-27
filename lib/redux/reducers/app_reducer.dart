@@ -21,6 +21,7 @@ final loadReducer = combineReducers<bool>([
   TypedReducer<bool, GetAllBucketAction>(setLoading),
   TypedReducer<bool, SetBucketAction>(setLoaded),
   TypedReducer<bool, GetAllTasks>(setLoading),
+  TypedReducer<bool, GetTasksByDefaultFilterAction>(setLoading),
   TypedReducer<bool, GetTasksByBucketIdAction>(setLoading),
   TypedReducer<bool, SetTaskAction>(setLoaded),
 ]);

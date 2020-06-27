@@ -69,6 +69,13 @@ class UpdateTaskAction {
 
 }
 
+/// タスク削除
+class DeleteTaskAction {
+  final TaskEntity taskEntity;
+
+  DeleteTaskAction(this.taskEntity);
+}
+
 /// バケットIDにてタスク削除
 class DeleteTasksActionByBucketId {
   final int bucketId;

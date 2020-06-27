@@ -25,6 +25,7 @@ class TasktListContainer extends StatelessWidget {
       TaskList(
         taskEntities: viewModel.taskEntities,
         onInit: () => viewModel.onInit(bucketEntity.id),
+        onPressedDelete: viewModel.onPressedDelete,
         onPressedUpdate: viewModel.onPressedUpdate,
         toTaskEditScreen: toTaskEditScreen,
         )
@@ -37,8 +38,15 @@ class _ViewModel {
   final List<TaskEntity> taskEntities;
   final Function(int) onInit;
   final Function(TaskEntity) onPressedUpdate;
+  final Function(TaskEntity) onPressedDelete;
 
-  _ViewModel({@required this.isLoading, @required this.taskEntities, @required this.onInit, @required this.onPressedUpdate,});
+  _ViewModel({
+    @required this.isLoading,
+    @required this.taskEntities,
+    @required this.onInit,
+    @required this.onPressedUpdate,
+    @required this.onPressedDelete,
+    });
 
   static _ViewModel fromStore(Store<AppState> store) {
     return _ViewModel(
@@ -49,6 +57,9 @@ class _ViewModel {
       ),
       onPressedUpdate: (taskEntity) {
           store.dispatch(UpdateTaskAction(taskEntity));
+      },
+      onPressedDelete: (taskEntity) {
+        store.dispatch(DeleteTaskAction(taskEntity));
       }
     );
   }
