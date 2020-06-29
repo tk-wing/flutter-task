@@ -24,7 +24,6 @@ class FilterTaskList extends StatefulWidget {
 }
 
 class _FilterTaskList extends State<FilterTaskList> {
-  final GlobalKey<AnimatedListState> _animatedListKey = GlobalKey<AnimatedListState>();
   List<TaskEntity> get taskEntities => widget.taskEntities;
 
   @override
@@ -39,57 +38,46 @@ class _FilterTaskList extends State<FilterTaskList> {
       builder: (context, isLoading) {
         return isLoading
             ? Container()
-            : AnimatedList(
-                key: _animatedListKey,
-                initialItemCount: taskEntities.length,
-                itemBuilder: (context, index, animation) {
-                  return _buildItem(taskEntities[index], index, animation);
-                },
+            : ListView.builder(
+                itemCount: taskEntities.length,
+                itemBuilder: (context, index) => _buildItem(taskEntities[index], index),
               );
       },
     );
   }
 
-  Widget _buildItem(TaskEntity taskEntity, int currentIndex, Animation<double> animation) {
-    return SizeTransition(
-      sizeFactor: animation,
-      child: Dismissible(
+  Widget _buildItem(TaskEntity taskEntity, int currentIndex) {
+    return Card(
+      child: Slidable(
         key: Key(taskEntity.id.toString()),
-        child: Card(
-          child: Slidable(
-            actionPane: const SlidableDrawerActionPane(),
-            secondaryActions: <Widget>[
-              IconSlideAction(
-                caption: 'Delete',
-                color: Colors.red,
-                icon: Icons.delete,
-                onTap: () {
-                  widget.onPressedDelete(taskEntity);
-                  _animatedListKey.currentState.removeItem(
-                    currentIndex,
-                    (context, animation) => _buildItem(taskEntity, currentIndex, animation),
-                  );
-                },
-              ),
-            ],
-            child: ListTile(
-              leading: Checkbox(
-                  value: taskEntity.doneAt != null,
-                  onChanged: (_) => taskEntity.doneAt == null ? _onPressedDone(taskEntity) : _onPressedUndone(taskEntity)),
-              title: Text(taskEntity.title),
-              subtitle: taskEntity.description != null ? Text(taskEntity.description, maxLines: 1) : null,
-              onTap: () async {
-                await widget.toTaskEditScreen(context, taskEntity);
-                setState(() {
-                  widget.onInit();
-                });
-              },
-              trailing: GestureDetector(
-                child: Icon(Icons.menu),
-                // TODO 並び替え
-                onTap: () => print('humbger'),
-              ),
-            ),
+        actionPane: const SlidableDrawerActionPane(),
+        dismissal: SlidableDismissal(
+          child: const SlidableDrawerDismissal(),
+          onDismissed: (_) => widget.onPressedDelete(taskEntity),
+          ),
+        secondaryActions: <Widget>[
+          IconSlideAction(
+            caption: 'Delete',
+            color: Colors.red,
+            icon: Icons.delete,
+          ),
+        ],
+        child: ListTile(
+          leading: Checkbox(
+              value: taskEntity.doneAt != null,
+              onChanged: (_) => taskEntity.doneAt == null ? _onPressedDone(taskEntity) : _onPressedUndone(taskEntity)),
+          title: Text(taskEntity.title),
+          subtitle: taskEntity.description != null ? Text(taskEntity.description, maxLines: 1) : null,
+          onTap: () async {
+            await widget.toTaskEditScreen(context, taskEntity);
+            setState(() {
+              widget.onInit();
+            });
+          },
+          trailing: GestureDetector(
+            child: Icon(Icons.menu),
+            // TODO 並び替え
+            onTap: () => print('humbger'),
           ),
         ),
       ),
